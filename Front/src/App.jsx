@@ -6,6 +6,7 @@ import Cart from "./pages/Cart";
 import ShopByCategory from "./pages/ShopByCategory";
 import SingleProduct from "./pages/SingleProduct";
 import EcomProvider from "./context/EcomProvider";
+import AddProduct from "./admin/AddProduct";
 
 
 
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
     {
       path:"/product/:id", // This is a dynamic route. when the user visits /product/ee3a34578abc, the SingleProduct component will be rendered with the parameter id set to ee3a34578abc. 
       element:<SingleProduct />
+    },
+    {
+      path:"/admin/AddProduct",
+      element:<AddProduct />
     }
   ],
   },
