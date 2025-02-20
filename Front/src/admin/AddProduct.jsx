@@ -8,25 +8,33 @@ function AddProduct() {
         category:"",
         usualPrice:"",
         discountedPrice:"",
+        image:"",
     })
 
 
     function handleChange(e){
-        const {name, value} =e.target;
-        setForm({...form,[name]:value}); // [name] is a variable which can be anything like title, category and so on. 
+   if(e.target.name==='image'){
+    setForm({...form, image:e.target.files[0]})
+   }
+  else{
+      const {name, value} =e.target;
+      setForm({...form,[name]:value}); // [name] is a variable which can be anything like title, category and so on. 
+  }
+
     }
 
     async function handleSubmit(e){
         e.preventDefault();
         try{
-           const formData= new FormData();
-           formData.append("title",form.title);
-           formData.append("brand",form.brand);
-           formData.append("category",form.category);
-           formData.append("usualPrice",form.usualPrice);
-           formData.append("discountedPrice",form.discountedPrice);
+        //    const formData= new FormData();
+        //    formData.append("title",form.title);
+        //    formData.append("brand",form.brand);
+        //    formData.append("category",form.category);
+        //    formData.append("usualPrice",form.usualPrice);
+        //    formData.append("discountedPrice",form.discountedPrice);
+        //    formData.append("image",form.image);
 
-         const response= await instance.post("/product/add", formData)
+         const response= await instance.post("/product/add", form)
     console.log(response);
         }
         catch(error){
@@ -35,13 +43,14 @@ function AddProduct() {
     }
 
   return (
-    <form action="" onSubmit={handleSubmit}>
-        <input type="text" placeholder='Enter Product Title' name='title' value={form.title} onChange={handleChange} />
-        <input type="text" placeholder='Enter Product Brand' name='brand' value={form.brand} onChange={handleChange} />
-        <input type="text" placeholder='Enter Product Category' name='category' value={form.category} onChange={handleChange} />
-        <input type="text" placeholder='Enter Product Usual Price' name='usualPrice' value={form.usualPrice} onChange={handleChange} />
-        <input type="text" placeholder='Enter Product Discounted Price' name='discountedPrice' value={form.discountedPrice} onChange={handleChange} />
-        <button type='submit'>Submit</button>
+    <form action="" onSubmit={handleSubmit} encType='multipart/form-data' className='flex flex-col gap-3 items-center justify-between'>
+        <input type="text" placeholder='Enter Product Title' name='title' value={form.title} onChange={handleChange} className='border' />
+        <input type="text" placeholder='Enter Product Brand' name='brand' value={form.brand} onChange={handleChange} className='border' />
+        <input type="text" placeholder='Enter Product Category' name='category' value={form.category} onChange={handleChange} className='border' />
+        <input type="text" placeholder='Enter Product Usual Price' name='usualPrice' value={form.usualPrice} onChange={handleChange} className='border' />
+        <input type="text" placeholder='Enter Product Discounted Price' name='discountedPrice' value={form.discountedPrice} onChange={handleChange} className='border' />
+        <input type="file" name='image' onChange={handleChange} />
+        <button type='submit' className='border px-2'>Submit</button>
     </form>
   )
 }
