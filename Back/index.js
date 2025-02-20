@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./connection/Db.js";
 import productRouter from "./routes/productRoutes.js";
+import "dotenv/config"
+
+
 
 // Mongoose is a third party package that allows us to interact with MongoDB
 // It is an object Data modeling (ODM) library for mongodb and nodejs
@@ -13,8 +16,11 @@ import productRouter from "./routes/productRoutes.js";
 
 // Model is a class with which we construct documents.
 
-const port = 4000;
 const app = express();
+const port = process.env.PORT;
+
+
+
 
 app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
@@ -28,6 +34,6 @@ connectDB();
 
 
 
-app.listen(port, (req, res) => {
+app.listen(port, () => {
   console.log("Server started at " + port);
 });
