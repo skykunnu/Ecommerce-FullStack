@@ -7,6 +7,8 @@ import ShopByCategory from "./pages/ShopByCategory";
 import SingleProduct from "./pages/SingleProduct";
 import EcomProvider from "./context/EcomProvider";
 import AddProduct from "./admin/AddProduct";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 
 
@@ -41,7 +43,15 @@ const router = createBrowserRouter([
     {
       path:"/admin/AddProduct",
       element:<AddProduct />
-    }
+    },
+    {
+      path:"/user/register",
+      element:<Register />
+    },
+    {
+      path:"/user/login",
+      element:<Login />
+    },
   ],
   },
 ]);

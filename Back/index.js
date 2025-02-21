@@ -3,6 +3,7 @@ import cors from "cors";
 import { connectDB } from "./connection/Db.js";
 import productRouter from "./routes/productRoutes.js";
 import "dotenv/config"
+import userRouter from "./routes/userRoutes.js";
 
 
 
@@ -24,7 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-app.use("/api", productRouter);
+app.use("/api/product", productRouter);
+app.use("/api/user", userRouter);
 
 connectDB();
 
