@@ -26,16 +26,16 @@ function AddProduct() {
     async function handleSubmit(e){
         e.preventDefault();
         try{
-        //    const formData= new FormData();
-        //    formData.append("title",form.title);
-        //    formData.append("brand",form.brand);
-        //    formData.append("category",form.category);
-        //    formData.append("usualPrice",form.usualPrice);
-        //    formData.append("discountedPrice",form.discountedPrice);
-        //    formData.append("image",form.image);
+           const formData= new FormData();
+           formData.append("title",form.title);
+           formData.append("brand",form.brand);
+           formData.append("category",form.category);
+           formData.append("usualPrice",form.usualPrice);
+           formData.append("discountedPrice",form.discountedPrice);
+           formData.append("image",form.image);
 
-         const response= await instance.post("/product/add", form)
-    console.log(response);
+         const response= await instance.post("/product/add", formData)
+         console.log(response);
         }
         catch(error){
             console.log(error)

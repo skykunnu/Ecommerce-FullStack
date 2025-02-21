@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+// Schema is a blueprint of how data will be stored in the database. 
+// Mongoose is a third party package that allows us to interact with MongoDB
+// It is an object Data modeling (ODM) library for mongodb and nodejs.
+// Model is a class with which we construct documents.
+
 
 const productSchema = new mongoose.Schema({
   title: {

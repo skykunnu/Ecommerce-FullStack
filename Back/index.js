@@ -6,15 +6,11 @@ import "dotenv/config"
 
 
 
-// Mongoose is a third party package that allows us to interact with MongoDB
-// It is an object Data modeling (ODM) library for mongodb and nodejs
 
 // CORS is a browser feature that does not allow  different origins to share data among each other.
 
-// Schema is a blueprint of how data will be stored in the database. 
 
 
-// Model is a class with which we construct documents.
 
 const app = express();
 const port = process.env.PORT;

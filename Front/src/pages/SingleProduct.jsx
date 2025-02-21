@@ -4,11 +4,12 @@ import { useParams } from "react-router-dom";
 import { MdOutlineCurrencyRupee } from "react-icons/md";
 import { useEcom } from "../context/EcomProvider";
 import Loader from "../Components/Loader";
+import DisplayProduct from "../Components/DisplayProduct";
 
 function SingleProduct() {
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(false);
-  const { addToCart, removeFromCart, existInCart, existInWishlist, removeFromWishlist, addToWishlist } = useEcom();
+  const { addToCart, removeFromCart, existInCart, existInWishlist, removeFromWishlist, addToWishlist, filterByCategory, productsByCat } = useEcom();
 
   let { id } = useParams(); // It retrieves the 'id' parameter from the URL.
 
@@ -16,7 +17,10 @@ function SingleProduct() {
     if (id) {
       fetchProduct(id);
     }
-  }, [id]);
+    if(product.category){
+      filterByCategory(product.category);
+    }
+  }, [id, product.category]);
 
   async function fetchProduct(id) {
     try {
@@ -104,6 +108,13 @@ function SingleProduct() {
           </div>
         </div>
       </div>
+
+      <div>
+        <h1 className='text-2xl'>Similar Products</h1>
+
+        <DisplayProduct product={productsByCat.filter((item)=>item._id!==product._id)}/>
+      </div>
+
     </>
   );
 }
