@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt"
 import User from "../models/userModel.js";
+import jwt from "jsonwebtoken"
 
 export async function registerUser(req, res){
 try{
@@ -27,8 +28,26 @@ try{
     const passwordMatches=await bcrypt.compare(password, user.password);
     if(!passwordMatches) return res.status(404).send({message:"Invalid Crendentials"});
 
-    res.send({message:"User login", user:user});
+    const loginToken=jwt.sign(
+        {id:user._id, email:user.email},
+        process.env.JWT_SECRET,
+        {
+            expiresIn:"1h",
+        }
+    );
+
+    console.log("LoginToken",loginToken);
+
+    res.cookie("LoginToken",loginToken,{
+        httpOnly:false,
+        secure:false,
+        sameSite:"strict",
+        maxAge:3600000,
+    })
+    .send({message:"Login Successfull", user:user})
+
 }catch(error){
     return res.status(500).send({message:"User not login", errorString: error.message});
 }
+
 }
