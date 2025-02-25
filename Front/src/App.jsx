@@ -9,6 +9,7 @@ import EcomProvider from "./context/EcomProvider";
 import AddProduct from "./admin/AddProduct";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import AuthProvider from "./Context/AuthProvider";
 
 
 
@@ -66,7 +67,7 @@ function App() {
   {/* EcomProvider provides access to shared state and functions (e.g., products, cart, and functions like fetchProduct and addToCart) across the entire app. 
   Any component wrapped by EcomProvider can use the custom hook useEcom to access this shared state.
   */}
-
+  <AuthProvider>
   <EcomProvider> 
     {/* The RouterProvider is responsible for rendering different components based on the current URL.  
     It uses router object to determine which components to render for each route.
@@ -74,6 +75,7 @@ function App() {
     */}
   <RouterProvider router={router} /> 
   </EcomProvider>
+  </AuthProvider>
  </> 
   );
 }

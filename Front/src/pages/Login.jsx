@@ -1,8 +1,12 @@
+/* eslint-disable no-unused-vars */
 import {useState} from "react"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import instance from "../axiosConfig";
+import { useAuth } from "../Context/AuthProvider";
 
 function Login() {
+  const navigate=useNavigate()
+  const {login}=useAuth()
 
 const [data, setData]=useState({
 email:"",
@@ -21,8 +25,14 @@ setData((prev)=>{
 async function handleSubmit(e){
     e.preventDefault();
     try{
-      const repsonse=await instance.post("/user/login",data);
-      console.log(repsonse)
+      const response=await instance.post("/user/login",data,{
+      withCredentials:true,
+      });
+      if(response.status===200){
+        login();
+        navigate("/")
+        
+      }
     }
     catch(error){
       console.log(error);

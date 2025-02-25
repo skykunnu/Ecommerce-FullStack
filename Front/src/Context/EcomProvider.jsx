@@ -2,8 +2,8 @@
 /* eslint-disable react/prop-types */
 
 import { createContext, useContext, useState } from "react"; // create and use context are react hooks used to manage and consume context. 
-import instance from "../axiosConfig"; // It is an axios instance used to make http requests. 
-
+ // It is an api fetching tool used to make http requests. 
+import axios from "axios";
 
 // Context in react is made to solve the problem of prop drilling and to provide shared state or functions to multiple components. 
 // Context creates a central state (like a global store) that any component can access.  
@@ -27,7 +27,7 @@ function EcomProvider({ children }) {
   async function fetchProduct() {
     try {
       setLoading(true);
-      const response = await instance.get(`/product/`);
+      const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product`);
       setProduct(response.data);
     } catch (error) {
       console.log(error);
@@ -42,7 +42,7 @@ function EcomProvider({ children }) {
   async function fetchCategories(){
     try {
       setLoading(true);
-      const response = await instance.get("/product/categories/all");
+      const response = await axios.get("https://ecommerce-api-8ga2.onrender.com/api/product/categories/all");
       console.log(response.data);
       setCategories(response.data);
     } catch (error) {
@@ -57,7 +57,7 @@ function EcomProvider({ children }) {
   async function filterByCategory(category) {
     try {
       setLoading(true);
-      const response = await instance.get("/product/?category=" + category);
+      const response = await axios.get("https://ecommerce-api-8ga2.onrender.com/api/product/?category=" + category);
       setProductsByCat(response.data);
     } catch (error) {
       console.log(error);

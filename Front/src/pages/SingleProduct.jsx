@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import instance from "../axiosConfig";
+import axios from "axios"
 import { useParams } from "react-router-dom";
 import { MdOutlineCurrencyRupee } from "react-icons/md";
 import { useEcom } from "../context/EcomProvider";
@@ -25,7 +25,7 @@ function SingleProduct() {
   async function fetchProduct(id) {
     try {
       setLoading(true);
-      const response = await instance.get(`/product/${id}`);
+      const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product/${id}`);
       setProduct(response.data);
     } catch (error) {
       console.log(error);
