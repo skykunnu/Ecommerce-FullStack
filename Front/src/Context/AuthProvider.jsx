@@ -12,26 +12,42 @@ useEffect(()=>{
 },[])
 
 async function checkAuth(){
-    const response=await instance.get("/auth/check",{
-        withCredentials:true,
-    })
-    if(response.status===200) setIsUserLoggedIn(true)
+ try{
+     const response=await instance.get("/auth/check",{
+         withCredentials:true,
+     })
+     if(response.status===200) setIsUserLoggedIn(true)
+ }
+ catch(error){
+    console.log(error);
+  setIsUserLoggedIn(false);
+ }
 }
 
-function login(){
-    setIsUserLoggedIn(true)
-}
-
-async function logout(){
-    const response=await instance.post("/logoutUser",{withCredentials:true})
-    if(response.status===200){
-        setIsUserLoggedIn(false)
+async function logout() {
+    try {
+      await instance.post(
+        "/auth/logout",
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      setIsUserLoggedIn(false);
+      checkAuth(); 
+    } catch (error) {
+      console.log(error);
     }
-}
+  }
+
+
+
+
+
 
     return (
     
-        <AuthContext.Provider value={{isUserLoggedIn, login, logout}}>
+        <AuthContext.Provider value={{isUserLoggedIn, logout, checkAuth}}>
             {children}
         </AuthContext.Provider>
   )
@@ -41,6 +57,6 @@ export function useAuth(){
     return useContext(AuthContext);
 }
 
-export default AuthProvider
+export default AuthProvider;
 
 

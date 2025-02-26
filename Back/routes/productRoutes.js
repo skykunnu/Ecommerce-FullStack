@@ -1,13 +1,11 @@
-import express from "express"
+import express from "express";
 
-import { addProduct } from "../controllers/Product.js"
+import { addProduct, fetchProduct } from "../controllers/Product.js";
 import upload from "../middlewares/multer.js";
 
+const productRouter = express.Router();
 
-
-
-const productRouter=express.Router();
-
-productRouter.post('/product/add', upload.single("image") ,addProduct);
+productRouter.post("/add", upload.single("image"), addProduct);
+productRouter.get("/get", fetchProduct);
 
 export default productRouter;

@@ -27,7 +27,11 @@ function EcomProvider({ children }) {
   async function fetchProduct() {
     try {
       setLoading(true);
-      const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product`);
+      // const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product`);
+      const response = await axios.get(`/product/get`,{
+        withCredentials:true
+      });
+      console.log(response.data)
       setProduct(response.data);
     } catch (error) {
       console.log(error);
