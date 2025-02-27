@@ -10,6 +10,7 @@ import AddProduct from "./admin/AddProduct";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import AuthProvider from "./Context/AuthProvider";
+import AddCategory from "./admin/AddCategory";
 
 
 
@@ -53,6 +54,11 @@ const router = createBrowserRouter([
       path:"/user/login",
       element:<Login />
     },
+    {
+      path:"/admin/AddCategory",
+      element:<AddCategory />
+    },
+    
   ],
   },
 ]);

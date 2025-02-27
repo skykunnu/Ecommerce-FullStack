@@ -1,5 +1,8 @@
 import {useState} from "react"
 import instance from "../axiosConfig"
+
+
+
 function AddCategory() {
 const[form,setForm]=useState({
     name:'',
@@ -32,6 +35,7 @@ console.log(error)
     <form action="" encType='multipart/form-data' onSubmit={handleSubmit}>
         <input type="text" name='name' value={form.name} onChange={handleChange} />
         <input type="file" name='image'  onChange={handleChange} />
+        <button type='submit'>Submit</button>
     </form>
     </>
   )

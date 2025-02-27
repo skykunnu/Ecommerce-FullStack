@@ -31,12 +31,27 @@ export async function fetchProduct(req, res) {
   }
 }
 
-export async function fetchCategories(req,res){
-  try{
-    const category=await categoryModel.find({});
-    res.send(category)
+export async function fetchCategories(req, res) {
+  try {
+    const category = await categoryModel.find({});
+    res.send(category);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
   }
-  catch(error){
-    res.status(500).send({message:error.message});
+}
+
+export async function addCategory(req, res) {
+  try {
+    const file = req.file;
+    if (!file) return res.status(404).send({ message: "File Not Found" });
+    const secure_url = await uploadToCloudinary(req);
+
+    const newCategory = new categoryModel({ ...req.body, image: secure_url });
+    await newCategory.save();
+    res.status(201).send({ message: "Category Added" });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Category not added", Error: error.message });
   }
 }
