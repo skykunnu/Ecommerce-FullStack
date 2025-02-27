@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios"
+import instance from '../axiosConfig'
 
 
 
@@ -34,9 +34,7 @@ function AddProduct() {
       formData.append("discountedPrice", form.discountedPrice);
       formData.append("image", form.image);
 
-      const response = await axios.post("http://localhost:4000/api/product/add", formData, {
-        withCredentials: true,
-      });
+      const response = await instance.post("/product/add", formData,{withCredentials:true});
       console.log(response);
     } catch (error) {
       console.log(error);

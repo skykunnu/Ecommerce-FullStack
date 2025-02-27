@@ -3,7 +3,7 @@ import express from "express";
 
 const authRouter=express.Router();
 
-authRouter.get("/check",check, (req,res)=>{
+authRouter.get("/check", (req,res)=>{
     res.send({message: "User Authenticated"});
 });
 
