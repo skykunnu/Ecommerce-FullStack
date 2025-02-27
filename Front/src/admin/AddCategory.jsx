@@ -2,7 +2,7 @@ import {useState} from "react"
 import instance from "../axiosConfig"
 
 
-
+ 
 function AddCategory() {
 const[form,setForm]=useState({
     name:'',
@@ -33,9 +33,9 @@ console.log(error)
   return (
     <>
     <form action="" encType='multipart/form-data' onSubmit={handleSubmit}>
-        <input type="text" name='name' value={form.name} onChange={handleChange} />
-        <input type="file" name='image'  onChange={handleChange} />
-        <button type='submit'>Submit</button>
+        <input type="text" name='name' value={form.name} onChange={handleChange} className='border mx-2' placeholder='Enter the name' />
+        <input type="file" name='image'  onChange={handleChange} className='border mx-2' />
+        <button type='submit' className='rounded border px-2 mx-2'>Submit</button>
     </form>
     </>
   )

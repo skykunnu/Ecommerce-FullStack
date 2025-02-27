@@ -24,10 +24,16 @@ function DisplayProduct({product}) {
                         : item.title}
                     </h2>
                     <p className="my-2 flex items-center justify-center">
+                      <h4 className='text-black font-bold'>Original Price:-</h4>
                       <span>
                         <MdOutlineCurrencyRupee />
                       </span>
-                      {item.price}
+                      {item.usualPrice}
+                    </p>
+                    <p className='my-2 flex items-center justify-center'>
+                    <h4 className='text-red-700 font-bold'>Discounted Price:-</h4>
+                    <span><MdOutlineCurrencyRupee /></span>
+                      {item.discountedPrice}
                     </p>
                     <button className="rounded px-2 py-1 bg-blue-400 text-white">
                       Add to Wishlist

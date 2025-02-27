@@ -22,7 +22,13 @@ export async function addProduct(req, res) {
 
 export async function fetchProduct(req, res) {
   try {
-    const products = await Product.find({});
+    let query={}
+    if(req.query.category){
+      query.category={$regex: new RegExp(`^${req.query.category}$`,"i")};
+    }
+    
+
+    const products = await Product.find(query);
     res.send(products);
   } catch (error) {
     res

@@ -8,10 +8,9 @@ import { useAuth } from "../Context/AuthProvider";
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { cart, categories, fetchCategories } = useEcom();
-  const {isUserLoggedIn, logout}=useAuth();
+  const { isUserLoggedIn, logout } = useAuth();
 
-
- // When the Header component mounts for the first time and also it is without dependency which means it will not run again unless the component is unmounted and remounted. 
+  // When the Header component mounts for the first time and also it is without dependency which means it will not run again unless the component is unmounted and remounted.
 
   useEffect(() => {
     fetchCategories();
@@ -63,7 +62,9 @@ function Header() {
 
           <div
             id="dropdown"
-            className={`z-1 ${dropdownOpen ? 'block' : 'hidden'} bg-white divide-y divide-gray-100 shadow-sm w-44 dark:bg-amber-400 absolute mt-3`}
+            className={`z-1 ${
+              dropdownOpen ? "block" : "hidden"
+            } bg-white divide-y divide-gray-100 shadow-sm w-44 dark:bg-amber-400 absolute mt-3`}
           >
             <ul
               className="py-2 text-sm text-black dark:text-black"
@@ -71,15 +72,14 @@ function Header() {
             >
               {categories.length > 0 &&
                 categories.map((category, index) => {
-                  console.log(categories)
-                  
+
                   return (
                     <li key={index}>
                       <a
-                        href={`/category/${category.category.toLowerCase()}`}
+                        href={`/category/${category.name.toLowerCase()}`}
                         className="block w-full px-4 py-2 hover:bg-gray-500 dark:hover:bg-gray-600 dark:hover:text-white text-left"
                       >
-                        {category.category}
+                        {category.name}
                       </a>
                     </li>
                   );
@@ -87,8 +87,11 @@ function Header() {
             </ul>
           </div>
         </li>
-        {isUserLoggedIn ? <Link onClick={logout}>Logout</Link> :<Link to='/user/login'>Login</Link>}
-
+        {isUserLoggedIn ? (
+          <Link onClick={logout}>Logout</Link>
+        ) : (
+          <Link to="/user/login">Login</Link>
+        )}
 
         <Link to="/cart">
           <p className="flex relative">
