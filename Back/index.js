@@ -6,6 +6,7 @@ import "dotenv/config"
 import userRouter from "./routes/userRoutes.js";
 import cookieParser from 'cookie-parser'
 import authRouter from "./routes/authRoutes.js";
+import dealRouter from "./routes/dealRoutes.js";
 
 // CORS is a browser feature that does not allow  different origins to share data among each other.
 
@@ -31,6 +32,7 @@ app.use(cookieParser());
 app.use("/api/product", productRouter);
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/deals", dealRouter);
 
 connectDB();
 

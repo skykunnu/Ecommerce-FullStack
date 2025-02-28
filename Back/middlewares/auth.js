@@ -1,22 +1,19 @@
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import User from "../models/userModel.js"
+import User from "../models/userModel.js";
 
+export async function check(req, res, next) {
+  const token = req.cookies.LoginToken;
+  if (!token) return res.status(401).send({ message: "No Token Found" });
 
-export async function check(req,res,next){
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const token=req.cookies.loginToken;
-    if(!token) return res.status(401).send({message:"No Token Found"})
+  const user = await User.findById(decoded.id).select("-password");
 
-    const decoded=jwt.verify(token, process.env.JWT_SECRET);
+  if (!user) {
+    return res.status(401).json({ message: "USER NOT FOUND" });
+  }
 
-    const user=await UserActivation.findById(decoded.id).select("-password");
-
-    if(!user){
-        return res.status(401).json({message: "USER NOT FOUND"});
-    }
-
-    req.user=user;
-    next();
-
+  req.user = user;
+  next();
 }

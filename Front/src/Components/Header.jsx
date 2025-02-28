@@ -22,6 +22,9 @@ function Header() {
         <div className="font-bold text-xl">Ecommerce</div>
       </Link>
       <ul className="flex gap-4">
+        <Link to="/hotDeals">
+          <li>HotDeals</li>
+        </Link>
         <Link to="/">
           <li>Home</li>
         </Link>
@@ -72,7 +75,6 @@ function Header() {
             >
               {categories.length > 0 &&
                 categories.map((category, index) => {
-
                   return (
                     <li key={index}>
                       <a

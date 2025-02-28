@@ -1,4 +1,5 @@
-import { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useState} from "react";
 import instance from '../axiosConfig'
 
 
@@ -8,10 +9,13 @@ function AddProduct() {
     title: "",
     brand: "",
     category: "",
-    usualPrice: "",
+    OriginalPrice: "",
     discountedPrice: "",
     image: "",
   });
+
+  
+
 
   function handleChange(e) {
     if (e.target.name === "image") {
@@ -30,12 +34,22 @@ function AddProduct() {
       formData.append("title", form.title);
       formData.append("brand", form.brand);
       formData.append("category", form.category);
-      formData.append("usualPrice", form.usualPrice);
+      formData.append("usualPrice", form.OriginalPrice);
       formData.append("discountedPrice", form.discountedPrice);
       formData.append("image", form.image);
 
       const response = await instance.post("/product/add", formData,{withCredentials:true});
       console.log(response);
+      setForm({
+        title:'',
+        brand: "",
+        category: "",
+        OriginalPrice: "",
+        discountedPrice: "",
+        image: "",
+      })
+
+      
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +90,7 @@ function AddProduct() {
         type="text"
         placeholder="Enter Product Usual Price"
         name="usualPrice"
-        value={form.usualPrice}
+        value={form.OriginalPrice}
         onChange={handleChange}
         className="border"
       />
@@ -88,6 +102,7 @@ function AddProduct() {
         onChange={handleChange}
         className="border"
       />
+
       <input type="file" name="image" onChange={handleChange} />
       <button type="submit" className="border px-2">
         Submit

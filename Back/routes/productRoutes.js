@@ -1,6 +1,6 @@
 import express from "express";
 
-import { addProduct, fetchCategories, fetchProduct,addCategory } from "../controllers/Product.js";
+import { addProduct, fetchCategories, fetchProduct,addCategory, fetchHotDeals } from "../controllers/Product.js";
 import upload from "../middlewares/multer.js";
 
 const productRouter = express.Router();
@@ -10,5 +10,6 @@ productRouter.get("/get", fetchProduct);
 productRouter.get("/product/:id", fetchProduct);
 productRouter.get("/category",fetchCategories);
 productRouter.post("/category/add",upload.single("image"),addCategory);
+
 
 export default productRouter;
