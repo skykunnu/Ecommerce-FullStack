@@ -8,7 +8,7 @@ import { useAuth } from "../Context/AuthProvider";
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { cart, categories, fetchCategories } = useEcom();
-  const { isUserLoggedIn, logout } = useAuth();
+  const { isUserLoggedIn, logout,isAdminLoggedIn} = useAuth();
 
   // When the Header component mounts for the first time and also it is without dependency which means it will not run again unless the component is unmounted and remounted.
 
@@ -89,7 +89,7 @@ function Header() {
             </ul>
           </div>
         </li>
-        {isUserLoggedIn ? (
+        {isUserLoggedIn || isAdminLoggedIn ? (
           <Link onClick={logout}>Logout</Link>
         ) : (
           <Link to="/user/login">Login</Link>

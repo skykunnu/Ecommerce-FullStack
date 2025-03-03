@@ -12,6 +12,7 @@ function AddProduct() {
     OriginalPrice: "",
     discountedPrice: "",
     image: "",
+    description:"",
   });
 
   
@@ -37,6 +38,7 @@ function AddProduct() {
       formData.append("usualPrice", form.OriginalPrice);
       formData.append("discountedPrice", form.discountedPrice);
       formData.append("image", form.image);
+      formData.append("description",form.description);
 
       const response = await instance.post("/product/add", formData,{withCredentials:true});
       console.log(response);
@@ -47,6 +49,7 @@ function AddProduct() {
         OriginalPrice: "",
         discountedPrice: "",
         image: "",
+        description:"",
       })
 
       
@@ -101,6 +104,13 @@ function AddProduct() {
         value={form.discountedPrice}
         onChange={handleChange}
         className="border"
+      />
+      <input type="text"
+      placeholder='Enter Product Description'
+      name='description'
+      value={form.description}
+      onChange={handleChange}
+      className="border"
       />
 
       <input type="file" name="image" onChange={handleChange} />

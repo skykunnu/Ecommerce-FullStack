@@ -13,6 +13,9 @@ import AuthProvider from "./Context/AuthProvider";
 import AddCategory from "./admin/AddCategory";
 import HotDeals from "./Components/HotDeals";
 
+import AdminLogin from "./admin/AdminLogin";
+import ProtectedRoute from "./Context/ProtectedRoute";
+
 
 
 // component is a function that renders UI element. 
@@ -45,7 +48,11 @@ const router = createBrowserRouter([
     },
     {
       path:"/admin/AddProduct",
-      element:<AddProduct />
+      element:
+      <ProtectedRoute>
+        <AddProduct />
+      </ProtectedRoute>
+      
     },
     {
       path:"/user/register",
@@ -54,6 +61,10 @@ const router = createBrowserRouter([
     {
       path:"/user/login",
       element:<Login />
+    },
+    {
+      path:"/admin/login",
+      element:<AdminLogin />
     },
     {
       path:"/admin/AddCategory",

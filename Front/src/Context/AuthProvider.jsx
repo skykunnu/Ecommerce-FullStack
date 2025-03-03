@@ -7,9 +7,11 @@ const AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   useEffect(() => {
     checkAuth();
+    checkAuthAdmin()
   }, []);
 
   async function checkAuth() {
@@ -24,25 +26,52 @@ function AuthProvider({ children }) {
     }
   }
 
-  async function logout() {
-    try {
-      await instance.post(
-        "/auth/logout",
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      setIsUserLoggedIn(false);
-      checkAuth();
-      window.location.href = "/user/login";
-    } catch (error) {
+  async function checkAuthAdmin(){
+    try{
+      await instance.get("/admin/check",{
+        withCredentials:true,
+      });
+      setIsAdminLoggedIn(true)
+    } catch(error){
       console.log(error);
+      setIsAdminLoggedIn(false)
     }
   }
 
+
+  async function logout() {
+    try {
+      if(isUserLoggedIn){
+        await instance.post(
+          "/auth/logout",
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+        setIsUserLoggedIn(false);
+        checkAuth();
+      }
+      else{
+        await instance.post(
+          '/admin/logout',
+          {},
+          {
+            withCredentials:true,
+          }
+        );
+setIsAdminLoggedIn(false)
+checkAuthAdmin()
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
   return (
-    <AuthContext.Provider value={{ isUserLoggedIn, logout, checkAuth }}>
+    <AuthContext.Provider value={{ isUserLoggedIn, logout, checkAuth,isAdminLoggedIn,checkAuthAdmin }}>
       {children}
     </AuthContext.Provider>
   );

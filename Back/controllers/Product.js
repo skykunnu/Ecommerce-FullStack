@@ -20,28 +20,27 @@ export async function addProduct(req, res) {
   }
 }
 
-export async function fetchHotDeals(req,res){
+export async function fetchHotDeals(req, res) {
   try {
-
-      const hotDeals=await Product.find({
-        discountedPrice:{$gte:1000}
-      })
-      res.status(200).json(hotDeals);
-    } catch (error) {
-      console.log(error)
-      res.status(500).json({ error: "Internal server error" });
-    }
+    const hotDeals = await Product.find({
+      discountedPrice: { $gte: 1000 },
+    });
+    res.status(200).json(hotDeals);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }
-
-
 
 export async function fetchProduct(req, res) {
   try {
-    let query={}
-    if(req.query.category){
-      query.category={$regex: new RegExp(`^${req.query.category}$`,"i")};
+    let query = {};
+    if (req.params.id) {
+      query._id = req.params.id;
     }
-    
+    if (req.query.category) {
+      query.category = { $regex: new RegExp(`^${req.query.category}$`, "i") };
+    }
 
     const products = await Product.find(query);
     res.send(products);
@@ -60,9 +59,6 @@ export async function fetchCategories(req, res) {
     res.status(500).send({ message: error.message });
   }
 }
-
-
-
 
 export async function addCategory(req, res) {
   try {

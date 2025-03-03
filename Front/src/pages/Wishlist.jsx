@@ -22,15 +22,14 @@ function Wishlist() {
               return (
                 <div key={Item.product._id}>
                   <img
-                    src={Item.product.url}
-                    alt={Item.product.name}
+                    src={Item.product.image}
                     className="w-[9rem] h-[9rem]"
                   />
                   <div>
-                    <h3 className="text-2xl mb-2">{Item.product.name}</h3>
+                    <h3 className="text-2xl mb-2">{Item.product.title}</h3>
                     <p className="flex items-center py-1 font-bold">
                       <MdOutlineCurrencyRupee className="" />
-                      <span>{Item.product.price}</span>
+                      <span>{Item.product.OriginalPrice}</span>
                     </p>
                     <div className="flex flex-col">
                       <span>
