@@ -6,8 +6,10 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 import { useEcom } from "../context/EcomProvider";
 import Loader from "../Components/Loader";
 import DisplayProduct from "../Components/DisplayProduct";
-
+import { useAuth } from "../Context/AuthProvider";
+import {useNavigate} from "react-router-dom"
 function SingleProduct() {
+  const navigate=useNavigate();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(false);
   const [categoryName, setCategoryName] = useState("");
@@ -22,6 +24,9 @@ function SingleProduct() {
     productsByCat,
     categories,
   } = useEcom();
+
+const {isUserLoggedIn}=useAuth();
+
   let { id } = useParams(); // It retrieves the 'id' parameter from the URL.
 
   useEffect(() => {
@@ -55,9 +60,24 @@ function SingleProduct() {
       setLoading(false);
     }
   }
+// console.log(window.location.href)
+function userCartAuthentication(){
+  if(isUserLoggedIn){
+    addToCart(product)
+  }
+  else{
+    navigate("/user/login/?referer="+window.location.href)
+  }
+}
+
+
+
+
+
+
+
 
   if (loading) return <Loader />;
-  console.log("productsBycat:", productsByCat);
 
   return (
     <>
@@ -113,7 +133,7 @@ function SingleProduct() {
             ) : (
               <button
                 className="bg-blue-500 text-white  px-3 py-1 font-bold cursor-pointer rounded"
-                onClick={() => addToCart(product)}
+                onClick={userCartAuthentication}
               >
                 Add to Cart
               </button>
@@ -124,10 +144,11 @@ function SingleProduct() {
 
       <div className='text-center'>
         <h1 className="text-2xl mb-3 bg-green-300">Similar Products</h1>
-
+       {(loading)? <Loader />:
         <DisplayProduct
           product={productsByCat.filter((item) => item._id !== product._id)}
-        />
+        />} 
+
       </div>
     </>
   );

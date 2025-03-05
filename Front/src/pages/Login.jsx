@@ -30,7 +30,14 @@ function Login() {
         response.status === 200 &&
         response.data.message === "Login Successfull"
       ) {
-        navigate("/");
+        // URLSearchParams is used to fetch the URL of the current location of the window.
+        const searchParams = new URLSearchParams(window.location.search);
+        const URLParam = searchParams.get("referer");
+        if (URLParam!== "") {
+          window.location.href = URLParam;
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       console.log(error);
