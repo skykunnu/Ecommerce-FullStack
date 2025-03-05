@@ -10,6 +10,7 @@ import DisplayProduct from "../Components/DisplayProduct";
 function SingleProduct() {
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(false);
+  const [categoryName, setCategoryName] = useState("");
   const {
     addToCart,
     removeFromCart,
@@ -19,8 +20,8 @@ function SingleProduct() {
     addToWishlist,
     filterByCategory,
     productsByCat,
+    categories,
   } = useEcom();
-
   let { id } = useParams(); // It retrieves the 'id' parameter from the URL.
 
   useEffect(() => {
@@ -28,17 +29,25 @@ function SingleProduct() {
       fetchProduct(id);
     }
     if (product.category) {
-      filterByCategory(product.category);
+      setCategoryName(
+        categories.find((obj) => {
+          return obj._id === product.category;
+        }).name
+      );
     }
   }, [id, product.category]);
+
+  useEffect(() => {
+    filterByCategory(categoryName);
+  }, [categoryName]);
 
   async function fetchProduct(id) {
     try {
       setLoading(true);
       // const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product/${id}`);
-      const response = await instance.get(`/product/${id}`);
+      const response = await instance.get(`/product/get/${id}`);
       setProduct(response.data[0]);
-      console.log(response.data);
+      console.log(response.data[0]);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -48,6 +57,7 @@ function SingleProduct() {
   }
 
   if (loading) return <Loader />;
+  console.log("productsBycat:", productsByCat);
 
   return (
     <>
@@ -61,15 +71,6 @@ function SingleProduct() {
         <div className="right w-3/4 mt-3">
           <h2 className="text-3xl font-bold py-4">{product.title}</h2>
 
-          {product.ratings && product.ratings.length > 0 ? (
-            <div className="flex my-2 text-xl">
-              <p>{product.totalRating}</p>
-              <p>{product.ratings.length} ratings</p>
-            </div>
-          ) : (
-            ""
-          )}
-
           <div className="flex items-center  leading-none">
             <span className="text-lg font-medium">
               <MdOutlineCurrencyRupee />
@@ -80,12 +81,11 @@ function SingleProduct() {
             <strong>Brand:- </strong> {product.brand}
           </h2>
           <h2>
-            <strong>Category:- </strong> {product.category}{" "}
+            <strong>Category:- </strong> {categoryName}
           </h2>
-          <div className="flex my-2">
-            <strong>Description:- </strong>
-            <p>{product.description}</p>
-          </div>
+          <h2 className="flex my-2">
+            <strong className='pr-1'>Description:-</strong> {product.description}
+          </h2>
 
           <div className="my-3 flex gap-2">
             {existInWishlist(product._id) ? (
@@ -122,8 +122,8 @@ function SingleProduct() {
         </div>
       </div>
 
-      <div>
-        <h1 className="text-2xl">Similar Products</h1>
+      <div className='text-center'>
+        <h1 className="text-2xl mb-3 bg-green-300">Similar Products</h1>
 
         <DisplayProduct
           product={productsByCat.filter((item) => item._id !== product._id)}

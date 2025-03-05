@@ -31,8 +31,8 @@ else{
 async function handleSubmit(e){
 e.preventDefault();
 try{
-  const repsonse=await instance.post("/user/register",data);
-  console.log(repsonse)
+  const repsonse=await instance.post("/user/register",data,{withCredentials:true});
+  console.log(repsonse.data)
 }
 catch(error){
   console.log(error);

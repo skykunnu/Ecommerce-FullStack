@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { useState} from "react";
-import instance from '../axiosConfig'
-
-
+import { useState } from "react";
+import instance from "../axiosConfig";
+import { useEcom } from "../Context/EcomProvider";
 
 function AddProduct() {
+  const { categories } = useEcom();
   const [form, setForm] = useState({
     title: "",
     brand: "",
@@ -12,11 +12,8 @@ function AddProduct() {
     OriginalPrice: "",
     discountedPrice: "",
     image: "",
-    description:"",
+    description: "",
   });
-
-  
-
 
   function handleChange(e) {
     if (e.target.name === "image") {
@@ -35,24 +32,26 @@ function AddProduct() {
       formData.append("title", form.title);
       formData.append("brand", form.brand);
       formData.append("category", form.category);
-      formData.append("usualPrice", form.OriginalPrice);
+      formData.append("OriginalPrice", form.OriginalPrice);
       formData.append("discountedPrice", form.discountedPrice);
       formData.append("image", form.image);
-      formData.append("description",form.description);
+      formData.append("description", form.description);
 
-      const response = await instance.post("/product/add", formData,{withCredentials:true});
+      console.log(form);
+
+      const response = await instance.post("/product/add", formData, {
+        withCredentials: true,
+      });
       console.log(response);
       setForm({
-        title:'',
+        title: "",
         brand: "",
         category: "",
         OriginalPrice: "",
         discountedPrice: "",
         image: "",
-        description:"",
-      })
-
-      
+        description: "",
+      });
     } catch (error) {
       console.log(error);
     }
@@ -81,18 +80,28 @@ function AddProduct() {
         onChange={handleChange}
         className="border"
       />
-      <input
-        type="text"
-        placeholder="Enter Product Category"
+      <select
         name="category"
+        id=""
         value={form.category}
         onChange={handleChange}
-        className="border"
-      />
+        className='border px-4'
+      >
+        <option value="" selected disabled placeholder='Select Category'>
+        Select Category
+        </option>
+        {categories.map((category, index) => {
+          return (
+            <option value={category._id} key={index}>
+              {category.name}
+            </option>
+          );
+        })}
+      </select>
       <input
         type="text"
         placeholder="Enter Product Usual Price"
-        name="usualPrice"
+        name="OriginalPrice"
         value={form.OriginalPrice}
         onChange={handleChange}
         className="border"
@@ -105,15 +114,16 @@ function AddProduct() {
         onChange={handleChange}
         className="border"
       />
-      <input type="text"
-      placeholder='Enter Product Description'
-      name='description'
-      value={form.description}
-      onChange={handleChange}
-      className="border"
+      <input
+        type="text"
+        placeholder="Enter Product Description"
+        name="description"
+        value={form.description}
+        onChange={handleChange}
+        className="border"
       />
 
-      <input type="file" name="image" onChange={handleChange} />
+      <input type="file" name="image" onChange={handleChange} className='ml-25'/>
       <button type="submit" className="border px-2">
         Submit
       </button>

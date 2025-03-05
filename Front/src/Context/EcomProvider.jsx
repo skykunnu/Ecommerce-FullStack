@@ -69,6 +69,7 @@ function EcomProvider({ children }) {
       setLoading(true);
       // const response = await axios.get("https://ecommerce-api-8ga2.onrender.com/api/product/?category=" + category);
       const response = await instance.get("/product/get/?category=" + category);
+      console.log(response.data);
       setProductsByCat(response.data);
     } catch (error) {
       console.log(error);

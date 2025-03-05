@@ -30,7 +30,7 @@ function AdminLogin() {
         response.status === 200 &&
         response.data.message === "Login Successfull"
       ) {
-        navigate("/");
+        navigate("/admin/addProduct");
       }
     } catch (error) {
       console.log(error);

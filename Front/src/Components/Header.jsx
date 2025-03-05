@@ -90,7 +90,7 @@ function Header() {
           </div>
         </li>
         {isUserLoggedIn || isAdminLoggedIn ? (
-          <Link onClick={logout}>Logout</Link>
+          <Link onClick={logout} to='/user/login'>Logout</Link>
         ) : (
           <Link to="/user/login">Login</Link>
         )}

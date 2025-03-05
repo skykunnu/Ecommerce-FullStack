@@ -1,14 +1,16 @@
 import uploadToCloudinary from "../middlewares/cloudinary.js";
 import categoryModel from "../models/CategoryModel.js";
 import Product from "../models/ProductModel.js";
+import mongoose from "mongoose";
 
 export async function addProduct(req, res) {
   try {
     const file = req.file;
+    // console.log(req.body);
     if (!file) return res.status(404).send({ message: "File Not Found" });
     const secure_url = await uploadToCloudinary(req);
 
-    console.log("Secure URL:", secure_url);
+    // console.log("Secure URL:", secure_url);
 
     const newProduct = new Product({ ...req.body, image: secure_url });
     await newProduct.save();
@@ -39,15 +41,20 @@ export async function fetchProduct(req, res) {
       query._id = req.params.id;
     }
     if (req.query.category) {
-      query.category = { $regex: new RegExp(`^${req.query.category}$`, "i") };
+      const categoryId = await categoryModel.find({
+        name: { $regex: new RegExp(`^${req.query.category}$`, "i") },
+      });
+      query.category = categoryId;
     }
-
+    console.log(query.category);
     const products = await Product.find(query);
+
     res.send(products);
   } catch (error) {
-    res
-      .status(500)
-      .send({ message: "Product not added", Error: error.message });
+    res.status(500).send({
+      message: "Couldn't fetch Product not added",
+      Error: error.message,
+    });
   }
 }
 
