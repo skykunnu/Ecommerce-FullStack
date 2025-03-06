@@ -77,12 +77,13 @@ function Header() {
                 categories.map((category, index) => {
                   return (
                     <li key={index}>
-                      <a
-                        href={`/category/${category.name.toLowerCase()}`}
+                      <Link
+                        to={`/category/${category.name.toLowerCase()}`}
+                        onClick={()=>setDropdownOpen((prev)=>!prev)}
                         className="block w-full px-4 py-2 hover:bg-gray-500 dark:hover:bg-gray-600 dark:hover:text-white text-left"
                       >
                         {category.name}
-                      </a>
+                      </Link>
                     </li>
                   );
                 })}
