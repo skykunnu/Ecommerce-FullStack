@@ -36,7 +36,10 @@ const router = createBrowserRouter([
     },
     {
       path:"/cart",
-      element:<Cart />
+      element:
+      <ProtectedRoute >
+        <Cart destination='user/login' />
+      </ProtectedRoute>
     },
     {
       path:"/category/:categoryId",
@@ -50,7 +53,7 @@ const router = createBrowserRouter([
       path:"/admin/AddProduct",
       element:
       <ProtectedRoute>
-        <AddProduct />
+        <AddProduct destination='admin/login' />
       </ProtectedRoute>
       
     },

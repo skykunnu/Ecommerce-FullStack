@@ -10,6 +10,8 @@ function AddProduct() {
     brand: "",
     category: "",
     OriginalPrice: "",
+    discountType: "",
+    discount: "",
     discountedPrice: "",
     image: "",
     description: "",
@@ -17,7 +19,6 @@ function AddProduct() {
 
   function handleChange(e) {
     if (e.target.name === "image") {
-      // console.log("imageFile", e.target.files[0]);
       setForm((form) => ({ ...form, image: e.target.files[0] }));
     } else {
       const { name, value } = e.target;
@@ -25,14 +26,25 @@ function AddProduct() {
     }
   }
 
+  function handleDiscountPriceChange(e) {
+    const a =
+      form.discountType === "%" || form.discount===""
+        ? form.OriginalPrice - (e.target.value * form.OriginalPrice) / 100
+        : form.OriginalPrice - e.target.value;
+
+    setForm((form) => ({ ...form, discountedPrice: a }));
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
+
     try {
       const formData = new FormData();
       formData.append("title", form.title);
       formData.append("brand", form.brand);
       formData.append("category", form.category);
       formData.append("OriginalPrice", form.OriginalPrice);
+      formData.append("discount", form.discount);
       formData.append("discountedPrice", form.discountedPrice);
       formData.append("image", form.image);
       formData.append("description", form.description);
@@ -85,10 +97,10 @@ function AddProduct() {
         id=""
         value={form.category}
         onChange={handleChange}
-        className='border px-4'
+        className="border px-4"
       >
-        <option value="" selected disabled placeholder='Select Category'>
-        Select Category
+        <option value="" selected disabled placeholder="Select Category">
+          Select Category
         </option>
         {categories.map((category, index) => {
           return (
@@ -106,6 +118,29 @@ function AddProduct() {
         onChange={handleChange}
         className="border"
       />
+      <div>
+      <select name="discountType" 
+                value={form.discountType} onChange={handleChange} required >
+                <option value="" selected disabled>Select discount type</option>
+                <option value="%"  > In Percentage</option>
+                <option value="inr"  >In Rupee</option>
+            </select>
+
+        <input
+          type="text"
+          name="discount"
+          placeholder={
+            form.discountType === "%"
+              ? "Discount in Percentage"
+              : "Discount in Rupees"
+          }
+          value={form.discount}
+          onChange={handleChange}
+          onBlur={handleDiscountPriceChange}
+          className="border"
+        />
+      </div>
+
       <input
         type="text"
         placeholder="Enter Product Discounted Price"
@@ -123,7 +158,12 @@ function AddProduct() {
         className="border"
       />
 
-      <input type="file" name="image" onChange={handleChange} className='ml-25'/>
+      <input
+        type="file"
+        name="image"
+        onChange={handleChange}
+        className="ml-25"
+      />
       <button type="submit" className="border px-2">
         Submit
       </button>

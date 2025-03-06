@@ -40,6 +40,7 @@ export async function fetchProduct(req, res) {
     if (req.params.id) {
       query._id = req.params.id;
     }
+    
     if (req.query.category) {
       const categoryId = await categoryModel.find({
         name: { $regex: new RegExp(`^${req.query.category}$`, "i") },

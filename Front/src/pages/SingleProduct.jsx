@@ -70,13 +70,6 @@ function userCartAuthentication(){
   }
 }
 
-
-
-
-
-
-
-
   if (loading) return <Loader />;
 
   return (
@@ -95,7 +88,7 @@ function userCartAuthentication(){
             <span className="text-lg font-medium">
               <MdOutlineCurrencyRupee />
             </span>
-            <span className="text-xl font-bold">{product.OriginalPrice}</span>
+            <span className="text-xl font-bold">{product.discountedPrice}</span>
           </div>
           <h2 className="my-2">
             <strong>Brand:- </strong> {product.brand}
