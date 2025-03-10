@@ -14,7 +14,7 @@ function DisplayProduct({ product }) {
                 <Link to={`/product/${item._id}`}>
                   <img
                     src={item.image}
-                    className="w-[14rem] h-[14rem] object-contain border"
+                    className="w-[14rem] h-[14rem] object-contain"
                   />
                 </Link>
                 <h2 className="my-2">

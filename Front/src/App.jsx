@@ -15,6 +15,8 @@ import HotDeals from "./Components/HotDeals";
 
 import AdminLogin from "./admin/AdminLogin";
 import ProtectedRoute from "./Context/ProtectedRoute";
+import AdminHome from "./admin/AdminHome";
+import AdminProducts from "./admin/AdminProducts";
 
 
 
@@ -36,10 +38,11 @@ const router = createBrowserRouter([
     },
     {
       path:"/cart",
-      element:
+      element:(
       <ProtectedRoute >
         <Cart destination='user/login' />
       </ProtectedRoute>
+      )
     },
     {
       path:"/category/:categoryId",
@@ -50,11 +53,28 @@ const router = createBrowserRouter([
       element:<SingleProduct />
     },
     {
+      path:"/admin",
+      element:<AdminLogin />
+    },
+    {
+      path:"/admin/login",
+      element:<AdminLogin />
+    },
+    {
+      path:"/admin/home",
+      element:(
+        <ProtectedRoute>
+          <AdminHome destination='admin/login'></AdminHome>
+        </ProtectedRoute>
+      )
+    },
+    {
       path:"/admin/AddProduct",
-      element:
+      element:(
       <ProtectedRoute>
         <AddProduct destination='admin/login' />
       </ProtectedRoute>
+      )
       
     },
     {
@@ -66,10 +86,6 @@ const router = createBrowserRouter([
       element:<Login />
     },
     {
-      path:"/admin/login",
-      element:<AdminLogin />
-    },
-    {
       path:"/admin/AddCategory",
       element:<AddCategory />
     },
@@ -77,6 +93,14 @@ const router = createBrowserRouter([
       path:"/hotDeals",
       element:<HotDeals />
     },
+    {
+      path:"/admin/products",
+      element:(
+        <ProtectedRoute>
+          <AdminProducts destination='admin/login'></AdminProducts>
+        </ProtectedRoute>
+      )
+    }
     
   ],
   },

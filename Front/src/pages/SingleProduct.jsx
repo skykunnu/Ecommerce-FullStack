@@ -7,9 +7,9 @@ import { useEcom } from "../context/EcomProvider";
 import Loader from "../Components/Loader";
 import DisplayProduct from "../Components/DisplayProduct";
 import { useAuth } from "../Context/AuthProvider";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 function SingleProduct() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(false);
   const [categoryName, setCategoryName] = useState("");
@@ -25,7 +25,7 @@ function SingleProduct() {
     categories,
   } = useEcom();
 
-const {isUserLoggedIn}=useAuth();
+  const { isUserLoggedIn } = useAuth();
 
   let { id } = useParams(); // It retrieves the 'id' parameter from the URL.
 
@@ -60,15 +60,26 @@ const {isUserLoggedIn}=useAuth();
       setLoading(false);
     }
   }
-// console.log(window.location.href)
-function userCartAuthentication(){
-  if(isUserLoggedIn){
-    addToCart(product)
+  // console.log(window.location.href)
+  async function userCartAuthentication() {
+    if (isUserLoggedIn) {
+      addToCart(product);
+    } else {
+      navigate("/user/login/?referer=" + window.location.href);
+    }
+
+    // try {
+    //   const response = await instance.post(
+    //     "/cart/add",
+    //     { product: product._id, quantity: 1 },
+    //     { withCredentials: true }
+    //   );
+    //   console.log("Cart updated", response.data);
+    //   addToCart(response.data);
+    // } catch (error) {
+    //   console.log("product not added to cart", error);
+    // }
   }
-  else{
-    navigate("/user/login/?referer="+window.location.href)
-  }
-}
 
   if (loading) return <Loader />;
 
@@ -97,7 +108,8 @@ function userCartAuthentication(){
             <strong>Category:- </strong> {categoryName}
           </h2>
           <h2 className="flex my-2">
-            <strong className='pr-1'>Description:-</strong> {product.description}
+            <strong className="pr-1">Description:-</strong>{" "}
+            {product.description}
           </h2>
 
           <div className="my-3 flex gap-2">
@@ -135,13 +147,15 @@ function userCartAuthentication(){
         </div>
       </div>
 
-      <div className='text-center'>
+      <div className="text-center">
         <h1 className="text-2xl mb-3 bg-green-300">Similar Products</h1>
-       {(loading)? <Loader />:
-        <DisplayProduct
-          product={productsByCat.filter((item) => item._id !== product._id)}
-        />} 
-
+        {loading ? (
+          <Loader />
+        ) : (
+          <DisplayProduct
+            product={productsByCat.filter((item) => item._id !== product._id)}
+          />
+        )}
       </div>
     </>
   );

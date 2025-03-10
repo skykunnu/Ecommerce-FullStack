@@ -103,21 +103,36 @@ function EcomProvider({ children }) {
   }
 
   // addToCart function
-  function addToCart(product) {
-    if (existInCart(product._id)) {
-      // If the product is already in the cart, updates it quantity.
-      setCart(
-        cart.map((cartItem) =>
-          cartItem.product._id === product._id
-            ? { ...cartItem, quantity: Number(cartItem.quantity) }
-            : cartItem
-        )
+  async function addToCart(product) {
+
+
+    try {
+      const response = await instance.post(
+        "/cart/add",
+        { product: product._id, quantity: 1 },
+        { withCredentials: true }
       );
-      // If the product is not in the cart, add it with the quantity 1.
-    } else {
-      const obj = { product, quantity: 1 };
-      setCart([...cart, obj]);
+      console.log("Cart updated", response.data);
+      addToCart(response.data);
+    } catch (error) {
+      console.log("product not added to cart", error);
     }
+
+
+    // if (existInCart(product._id)) {
+    //   // If the product is already in the cart, updates it quantity.
+    //   setCart(
+    //     cart.map((cartItem) =>
+    //       cartItem.product._id === product._id
+    //         ? { ...cartItem, quantity: Number(cartItem.quantity) }
+    //         : cartItem
+    //     )
+    //   );
+    //   // If the product is not in the cart, add it with the quantity 1.
+    // } else {
+    //   const obj = { product, quantity: 1 };
+    //   setCart([...cart, obj]);
+    // }
   }
 
   // function to check whether product is there in the cart or not.
@@ -193,3 +208,4 @@ export function useEcom() {
 }
 
 export default EcomProvider;
+

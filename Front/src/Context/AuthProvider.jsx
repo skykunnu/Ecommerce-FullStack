@@ -14,6 +14,7 @@ function AuthProvider({ children }) {
     checkAuthAdmin();
   }, []);
 
+  // user login auth
   async function checkAuth() {
     try {
       const response = await instance.get("/auth/check", {
@@ -26,6 +27,8 @@ function AuthProvider({ children }) {
     }
   }
 
+
+  // admin auth
   async function checkAuthAdmin() {
     try {
       await instance.get("/admin/check", {

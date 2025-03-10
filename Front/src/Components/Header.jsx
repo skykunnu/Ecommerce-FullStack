@@ -45,6 +45,8 @@ function Header() {
             onClick={() => setDropdownOpen((prev) => !prev)}
           >
             Shop By Category
+
+            {/* Below svg is an arrow which goes down on clicking shop by category button as setDropdownOpen initial value was false and onClick it becomes true.   */}
             <svg
               className="w-2.5 h-2.5 ms-3 transition-all duration-300"
               aria-hidden="true"

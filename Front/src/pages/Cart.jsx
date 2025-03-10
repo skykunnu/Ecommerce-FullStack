@@ -5,7 +5,7 @@ import { MdOutlineDeleteForever } from "react-icons/md";
 import {useState, useEffect} from 'react'
 
 function Cart() {
-  const { cart, updateQuantity, removeFromCart } = useEcom();
+  const { cart, updateQuantity, removeFromCart,addToCart } = useEcom();
   const [totalPrice, setTotalPrice]=useState(0);
   // const[deliveryCharges,setDeliveryCharges]=useState(0);
 
@@ -82,7 +82,8 @@ useEffect(() => {
 
                     <p
                       className="cursor-pointer w-5 border  border-amber-400 bg-amber-400 flex items-center justify-center"
-                      onClick={() => updateQuantity(item.product._id, "+")}
+                      // onClick={() => updateQuantity(item.product._id, "+")}
+                      onClick={()=>addToCart(item.product)}
                     >
                       +
                     </p>
