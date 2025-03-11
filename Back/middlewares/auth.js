@@ -3,6 +3,9 @@ import "dotenv/config";
 import User from "../models/userModel.js";
 import Admin from "../models/adminModel.js";
 
+
+
+// User login check
 export async function check(req, res, next) {
   const token = req.cookies.LoginToken;
   if (!token) return res.status(401).send({ message: "No Token Found" });
@@ -19,6 +22,9 @@ export async function check(req, res, next) {
   next();
 }
 
+
+
+// Admin login check
 export async function checkAdmin(req, res, next) {
   const token = req.cookies.adminToken;
   if (!token) return res.status(401).send({ message: "No Token Found" });

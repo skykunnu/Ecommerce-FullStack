@@ -40,17 +40,32 @@ export async function fetchProduct(req, res) {
     if (req.params.id) {
       query._id = req.params.id;
     }
-    
+
     if (req.query.category) {
       const categoryId = await categoryModel.find({
         name: { $regex: new RegExp(`^${req.query.category}$`, "i") },
       });
       query.category = categoryId;
     }
-    console.log(query.category);
-    const products = await Product.find(query);
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = Number(req.query.limit) === -1 ? 0 : 10;
+    const skip = (page - 1) * limit;
 
-    res.send(products);
+    const products = await Product.find(query)
+      .skip(skip)
+      .limit(limit)
+      .populate("category");
+    const TotalCount = await Product.countDocuments(query);
+
+    if (!products) {
+      return res.status(500).send({ message: "No products Data found" });
+    }
+
+    res.send({
+      products,
+      currentPage: page,
+      totalPage: Math.ceil(TotalCount / limit),
+    });
   } catch (error) {
     res.status(500).send({
       message: "Couldn't fetch Product not added",
@@ -81,5 +96,38 @@ export async function addCategory(req, res) {
     res
       .status(500)
       .send({ message: "Category not added", Error: error.message });
+  }
+}
+
+export async function deleteProductOrCategory(req, res) {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(404).send({ message: "No ID found" });
+
+    let whatToDelete;
+
+    whatToDelete = await Product.findByIdAndDelete(id);
+    if (!whatToDelete) {
+      whatToDelete = await categoryModel.findById(id);
+
+      const productsToModify = await Product.find({
+        category: whatToDelete._id,
+      });
+
+      const modifiedProducts = productsToModify.forEach(async (product) => {
+        await product.updateOne({ category: "" });
+      });
+
+      await whatToDelete.deleteOne();
+    }
+
+    if (!whatToDelete)
+      return res
+        .status(400)
+        .send({ message: "Could not delete the selected resource." });
+
+    return res.send({ message: "Resource Deleted" });
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
   }
 }

@@ -23,19 +23,45 @@ function EcomProvider({ children }) {
   const [dealProduct, setDealProduct] = useState([]);
 
   // fetching all Products
-  async function fetchProduct() {
+  async function fetchProduct(page=null) {
     try {
       setLoading(true);
       // const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product`);
-      const response = await instance.get(`/product/get`, {
+      const response = await instance.get(`/product/get?page=${page}`, {
         withCredentials: true,
       });
+      
       setProduct(response.data);
     } catch (error) {
       console.log(error);
       setLoading(false);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchAllProducts(){
+    try{
+      const response=await instance.get("/product/get?limit=-1",{withCredentials:true})
+      setProduct(response.data)
+    }catch (error) {
+      console.log(error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+
+
+  async function deleteProductOrCategory(idToDelete,whatToDelete){
+    try{
+    const response=await instance.delete(`/product/${idToDelete}`,{withCredentials:true})
+    if(response.status===200){
+      window.location.href=whatToDelete==='product'?"/admin/products":"/admin/categories"
+    }
+    }catch(error){
+      console.log(error)
     }
   }
 
@@ -119,21 +145,26 @@ function EcomProvider({ children }) {
     }
 
 
-    // if (existInCart(product._id)) {
-    //   // If the product is already in the cart, updates it quantity.
-    //   setCart(
-    //     cart.map((cartItem) =>
-    //       cartItem.product._id === product._id
-    //         ? { ...cartItem, quantity: Number(cartItem.quantity) }
-    //         : cartItem
-    //     )
-    //   );
-    //   // If the product is not in the cart, add it with the quantity 1.
-    // } else {
-    //   const obj = { product, quantity: 1 };
-    //   setCart([...cart, obj]);
-    // }
+    if (existInCart(product._id)) {
+      // If the product is already in the cart, updates it quantity.
+      setCart(
+        cart.map((cartItem) =>
+          cartItem.product._id === product._id
+            ? { ...cartItem, quantity: Number(cartItem.quantity) }
+            : cartItem
+        )
+      );
+      // If the product is not in the cart, add it with the quantity 1.
+    } else {
+      const obj = { product, quantity: 1 };
+      setCart([...cart, obj]);
+    }
   }
+
+
+
+
+
 
   // function to check whether product is there in the cart or not.
   function existInCart(id) {
@@ -178,6 +209,7 @@ function EcomProvider({ children }) {
         categories,
         productsByCat,
         dealProduct,
+        deleteProductOrCategory,
         fetchProduct,
         addToCart,
         removeFromCart,
@@ -189,6 +221,7 @@ function EcomProvider({ children }) {
         fetchCategories,
         filterByCategory,
         fetchHotDeals,
+        fetchAllProducts
       }}
     >
       {/* Below children represents <RouterProvider router={router} />  means every component rendered by RouterProvider (eg: First, Home, wishlist and so on) 

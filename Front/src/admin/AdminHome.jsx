@@ -1,6 +1,9 @@
 import {Link} from "react-router-dom"
+import { useEcom } from "../Context/EcomProvider"
 
 function AdminHome() {
+    const {product,categories}=useEcom();
+
   return (
    <div className='min-h-screen flex'>
     <aside className='w-1/5 ml-4 mt-4 px-2 bg-gray-200 rounded h-screen'>
@@ -24,7 +27,7 @@ function AdminHome() {
         <div className='grid grid-cols-2 gap-4'>
             <div className='bg-gray-200 p-4 rounded-lg'>
                 <h2 className='text-2xl font-bold'>Products</h2>
-                <p className='text-xl font-bold'>10</p>
+                <p className='text-xl font-bold'>{product?.products?.length}</p>
                 <div className='flex gap-4'>
                     <Link to='/admin/products'>View Products</Link>
                     <Link to='/admin/addProduct'>Add Product</Link>
@@ -38,10 +41,12 @@ function AdminHome() {
                 </div>
             </div>
             <div className='bg-gray-200 p-4 rounded-lg'>
-                <h2 className='text-2xl font-bold'>Categories</h2>
-                <p className='text-xl font-bold'>3</p>
+                <div className='category flex gap-1 py-2'>
+                <h2 className='text-2xl font-bold'>Categories :- </h2>
+                <p className='text-2xl font-bold'>{categories.length}</p>
+                </div>
                 <div className='flex gap-4'>
-                    <Link to="">View Categories</Link>
+                    <Link to="/admin/categories">View Categories</Link>
                     <Link to="/admin/addCategory">Add Category</Link>
                 </div>
             </div>

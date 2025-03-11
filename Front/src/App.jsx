@@ -12,11 +12,11 @@ import Login from "./pages/Login";
 import AuthProvider from "./Context/AuthProvider";
 import AddCategory from "./admin/AddCategory";
 import HotDeals from "./Components/HotDeals";
-
 import AdminLogin from "./admin/AdminLogin";
 import ProtectedRoute from "./Context/ProtectedRoute";
 import AdminHome from "./admin/AdminHome";
 import AdminProducts from "./admin/AdminProducts";
+import AdminCategories from "./admin/AdminCategories";
 
 
 
@@ -98,6 +98,14 @@ const router = createBrowserRouter([
       element:(
         <ProtectedRoute>
           <AdminProducts destination='admin/login'></AdminProducts>
+        </ProtectedRoute>
+      )
+    },
+    {
+      path:'/admin/categories',
+      element:(
+        <ProtectedRoute>
+          <AdminCategories destination='admin/login'></AdminCategories>
         </ProtectedRoute>
       )
     }

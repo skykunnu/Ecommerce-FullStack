@@ -2,12 +2,14 @@ import {useState} from "react"
 import instance from "../axiosConfig"
 
 
+
  
 function AddCategory() {
 const[form,setForm]=useState({
     name:'',
     image:'',
 })
+
 
 function handleChange(e){
     let {name,value}=e.target;
@@ -23,6 +25,10 @@ try{
     frm.append("image",form.image)
     const response=await instance.post("/product/category/add",frm,{withCredentials:true})
   console.log(response.data)
+  setForm({
+    name:"",
+    image:"",
+  })
 
 }
 catch(error){

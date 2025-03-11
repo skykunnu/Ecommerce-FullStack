@@ -21,7 +21,7 @@ function SingleProduct() {
     removeFromWishlist,
     addToWishlist,
     filterByCategory,
-    productsByCat,
+    // productsByCat,
     categories,
   } = useEcom();
 
@@ -153,7 +153,7 @@ function SingleProduct() {
           <Loader />
         ) : (
           <DisplayProduct
-            product={productsByCat.filter((item) => item._id !== product._id)}
+            // product={productsByCat.filter((item) => item._id !== product._id)}
           />
         )}
       </div>
