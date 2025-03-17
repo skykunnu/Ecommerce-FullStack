@@ -7,7 +7,7 @@ function DisplayProduct({ product }) {
   return (
     <div className="flex flex-wrap justify-center gap-16">
       {product?.products?.length > 0
-        ? product.products.map((item) => {
+        ? product?.products?.map((item) => {
             // console.log(product)
             return (
               <div key={item._id} className="text-center">
