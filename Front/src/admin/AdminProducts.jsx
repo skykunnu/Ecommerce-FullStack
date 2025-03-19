@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useEcom } from "../Context/EcomProvider";
+import { useAdminEcom } from "./Context/AdminEcomProvider";
 import { useEffect, useState } from "react";
 
 function AdminProducts() {
-  const { product, fetchProduct,deleteProductOrCategory} = useEcom();
+  const { product, fetchProduct,deleteProductOrCategory} = useAdminEcom();
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -11,7 +11,6 @@ function AdminProducts() {
     else fetchProduct();
   }, [page]);
 
-console.log(product)
   return (
     <div className="min-h-screen flex">
       <aside className="w-1/5 ml-3 p-2 bg-gray-200 rounded h-screen">

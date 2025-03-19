@@ -16,7 +16,6 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type:{},
-    ref:"category",
     required: true,
   },
   OriginalPrice: {

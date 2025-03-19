@@ -17,6 +17,8 @@ import ProtectedRoute from "./Context/ProtectedRoute";
 import AdminHome from "./admin/AdminHome";
 import AdminProducts from "./admin/AdminProducts";
 import AdminCategories from "./admin/AdminCategories";
+import AdminEcomProvider from "./admin/Context/AdminEcomProvider";
+import AdminAuthProvider from "./admin/Context/AdminAuthProvider";
 
 
 
@@ -124,6 +126,8 @@ function App() {
   {/* EcomProvider provides access to shared state and functions (e.g., products, cart, and functions like fetchProduct and addToCart) across the entire app. 
   Any component wrapped by EcomProvider can use the custom hook useEcom to access this shared state.
   */}
+  <AdminAuthProvider>
+  <AdminEcomProvider>
   <AuthProvider>
   <EcomProvider> 
     {/* The RouterProvider is responsible for rendering different components based on the current URL.  
@@ -133,6 +137,8 @@ function App() {
   <RouterProvider router={router} /> 
   </EcomProvider>
   </AuthProvider>
+  </AdminEcomProvider>
+  </AdminAuthProvider>
  </> 
   );
 }

@@ -7,11 +7,10 @@ const AuthContext = createContext(null);
 
 function AuthProvider({ children }) {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState({});
 
   useEffect(() => {
     checkAuth();
-    checkAuthAdmin();
   }, []);
 
   // user login auth
@@ -20,30 +19,22 @@ function AuthProvider({ children }) {
       const response = await instance.get("/auth/check", {
         withCredentials: true,
       });
-      if (response.status === 200) setIsUserLoggedIn(true);
+      if (response.status === 200){
+        setIsUserLoggedIn(true);
+        setLoggedInUser(response.user);
+      } 
     } catch (error) {
       console.log(error);
       setIsUserLoggedIn(false);
+      setLoggedInUser({});
     }
   }
 
 
-  // admin auth
-  async function checkAuthAdmin() {
-    try {
-      await instance.get("/admin/check", {
-        withCredentials: true,
-      });
-      setIsAdminLoggedIn(true);
-    } catch (error) {
-      console.log(error);
-      setIsAdminLoggedIn(false);
-    }
-  }
+  
 
   async function logout() {
-    try {
-      if (isUserLoggedIn) {
+    try {   
         await instance.post(
           "/auth/logout",
           {},
@@ -53,17 +44,7 @@ function AuthProvider({ children }) {
         );
         setIsUserLoggedIn(false);
         checkAuth();
-      } else {
-        await instance.post(
-          "/admin/logout",
-          {},
-          {
-            withCredentials: true,
-          }
-        );
-        setIsAdminLoggedIn(false);
-        checkAuthAdmin();
-      }
+    
     } catch (error) {
       console.log(error);
     }
@@ -75,8 +56,7 @@ function AuthProvider({ children }) {
         isUserLoggedIn,
         logout,
         checkAuth,
-        isAdminLoggedIn,
-        checkAuthAdmin,
+        loggedInUser
       }}
     >
       {children}

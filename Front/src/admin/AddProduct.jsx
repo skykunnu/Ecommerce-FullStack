@@ -17,6 +17,9 @@ function AddProduct() {
     description: "",
   });
 
+  const [error, setError] = useState("");
+
+
   function handleChange(e) {
     if (e.target.name === "image") {
       setForm((form) => ({ ...form, image: e.target.files[0] }));
@@ -70,6 +73,10 @@ function AddProduct() {
   }
 
   return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-4">
+    <div className="max-w-lg w-full space-y-8 p-8 bg-white rounded-lg shadow">
+      <h2 className="text-3xl font-bold text-center">Add Product</h2>
+      {error && <p className="text-red-500 text-center">{error}</p>}
     <form
       action=""
       onSubmit={handleSubmit}
@@ -168,6 +175,8 @@ function AddProduct() {
         Submit
       </button>
     </form>
+    </div>
+    </div>
   );
 }
 

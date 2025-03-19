@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {useState} from "react"
 import instance from "../axiosConfig"
 
@@ -10,6 +11,7 @@ const[form,setForm]=useState({
     image:'',
 })
 
+const [error, setError]=useState("");
 
 function handleChange(e){
     let {name,value}=e.target;
@@ -38,11 +40,17 @@ console.log(error)
 }
   return (
     <>
-    <form action="" encType='multipart/form-data' onSubmit={handleSubmit}>
+     <div className="min-h-screen bg-gray-100 flex items-center justify-center py-4">
+        <div className="max-w-lg w-full space-y-8 p-8 bg-white rounded-lg shadow">
+          <h2 className="text-3xl font-bold text-center">Add Category</h2>
+          {error && <p className="text-red-500 text-center">{error}</p>}
+        <form action="" encType='multipart/form-data' onSubmit={handleSubmit}>
         <input type="text" name='name' value={form.name} onChange={handleChange} className='border mx-2' placeholder='Enter the name' />
         <input type="file" name='image'  onChange={handleChange} className='border mx-2' />
         <button type='submit' className='rounded border px-2 mx-2'>Submit</button>
     </form>
+    </div>
+    </div>
     </>
   )
 }

@@ -42,20 +42,21 @@ export async function fetchProduct(req, res) {
     }
 
     if (req.query.category) {
-      const categoryId = await categoryModel.find({
-        name: { $regex: new RegExp(`^${req.query.category}$`, "i") },
-      });
-      query.category = categoryId;
+      query.category = new mongoose.Types.ObjectId(req.query.category);
     }
     const page = req.query.page ? Number(req.query.page) : 1;
     const limit = Number(req.query.limit) === -1 ? 0 : 10;
     const skip = (page - 1) * limit;
+
+    // console.log(query);
 
     const products = await Product.find(query)
       .skip(skip)
       .limit(limit)
       .populate("category");
     const TotalCount = await Product.countDocuments(query);
+
+    // console.log(products);
 
     if (!products) {
       return res.status(500).send({ message: "No products Data found" });

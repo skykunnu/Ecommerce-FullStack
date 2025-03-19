@@ -1,16 +1,19 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "../axiosConfig";
-import { useAuth } from "../Context/AuthProvider";
+import { useAdminAuth } from "./Context/AdminAuthProvider";
 
 function AdminLogin() {
   const navigate = useNavigate();
-  const { checkAuthAdmin } = useAuth();
+  const { checkAuthAdmin } = useAdminAuth();
 
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  const [error, setError] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -39,6 +42,10 @@ function AdminLogin() {
 
   return (
     <>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
+          <h2 className="text-3xl font-bold text-center">Login</h2>
+          {error && <p className="text-red-500 text-center">{error}</p>}
       <form action="" onSubmit={handleSubmit}>
         <input
           type="email"
@@ -56,6 +63,8 @@ function AdminLogin() {
         />
         <button type="submit">Login</button>
       </form>
+      </div>
+      </div>
     </>
   );
 }

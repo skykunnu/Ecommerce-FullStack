@@ -40,3 +40,6 @@ export async function loginAdmin(req, res) {
     }
   }
   
+  export async function count(){
+    
+  }

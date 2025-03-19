@@ -1,8 +1,14 @@
 import {Link} from "react-router-dom"
-import { useEcom } from "../Context/EcomProvider"
+import {useEffect} from "react"
+import { useAdminEcom } from "./Context/AdminEcomProvider"
 
 function AdminHome() {
-    const {product,categories}=useEcom();
+    const {count, getCount}=useAdminEcom();
+
+
+    useEffect(()=>{
+        getCount();
+    },[])
 
   return (
    <div className='min-h-screen flex'>
@@ -27,7 +33,7 @@ function AdminHome() {
         <div className='grid grid-cols-2 gap-4'>
             <div className='bg-gray-200 p-4 rounded-lg'>
                 <h2 className='text-2xl font-bold'>Products</h2>
-                <p className='text-xl font-bold'>{product?.products?.length}</p>
+                <p className='text-xl font-bold'>{count.products}</p>
                 <div className='flex gap-4'>
                     <Link to='/admin/products'>View Products</Link>
                     <Link to='/admin/addProduct'>Add Product</Link>
@@ -35,7 +41,7 @@ function AdminHome() {
             </div>
             <div className='bg-gray-200 p-4 rounded-lg'>
                 <h2 className='text-2xl font-bold'>Orders</h2>
-                <p className='text-xl font-bold'>5</p>
+                <p className='text-xl font-bold'>{count.orders}</p>
                 <div className='flex gap-4'>
                     <Link to="">View Orders</Link>
                 </div>
@@ -43,7 +49,7 @@ function AdminHome() {
             <div className='bg-gray-200 p-4 rounded-lg'>
                 <div className='category flex gap-1 py-2'>
                 <h2 className='text-2xl font-bold'>Categories :- </h2>
-                <p className='text-2xl font-bold'>{categories.length}</p>
+                <p className='text-2xl font-bold'>{count.categories}</p>
                 </div>
                 <div className='flex gap-4'>
                     <Link to="/admin/categories">View Categories</Link>
@@ -52,7 +58,7 @@ function AdminHome() {
             </div>
             <div className='bg-gray-200 p-4 rounded-lg' >
                 <h2 className='text-2xl font-bold'>Users</h2>
-                <p className='text-xl font-bold'>2</p>
+                <p className='text-xl font-bold'>{count.users}</p>
                 <div className='flex gap-4'>
                     <Link to=''>View Users</Link>
                 </div>
@@ -60,7 +66,7 @@ function AdminHome() {
         </div>
     </main>
    </div>
-  )
+  );
 }
 
 export default AdminHome

@@ -21,16 +21,17 @@ function EcomProvider({ children }) {
   const [categories, setCategories] = useState([]);
   const [productsByCat, setProductsByCat] = useState([]);
   const [dealProduct, setDealProduct] = useState([]);
+  const [singleProduct, setSingleProduct] = useState([]);
 
   // fetching all Products
-  async function fetchProduct(page=null) {
+  async function fetchProduct(page = null) {
     try {
       setLoading(true);
       // const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product`);
       const response = await instance.get(`/product/get?page=${page}`, {
         withCredentials: true,
       });
-      
+
       setProduct(response.data);
     } catch (error) {
       console.log(error);
@@ -40,11 +41,23 @@ function EcomProvider({ children }) {
     }
   }
 
-  async function fetchAllProducts(){
-    try{
-      const response=await instance.get("/product/get?limit=-1",{withCredentials:true})
-      setProduct(response.data)
-    }catch (error) {
+  async function fetchSingleProduct(id) {
+    try {
+      const response = await instance.get(`/product/get/${id}`);
+      setSingleProduct(response.data.products[0]);
+      console.log(response.data.products[0]);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchAllProducts() {
+    try {
+      const response = await instance.get("/product/get?limit=-1", {
+        withCredentials: true,
+      });
+      setProduct(response.data);
+    } catch (error) {
       console.log(error);
       setLoading(false);
     } finally {
@@ -52,16 +65,17 @@ function EcomProvider({ children }) {
     }
   }
 
-
-
-  async function deleteProductOrCategory(idToDelete,whatToDelete){
-    try{
-    const response=await instance.delete(`/product/${idToDelete}`,{withCredentials:true})
-    if(response.status===200){
-      window.location.href=whatToDelete==='product'?"/admin/products":"/admin/categories"
-    }
-    }catch(error){
-      console.log(error)
+  async function deleteProductOrCategory(idToDelete, whatToDelete) {
+    try {
+      const response = await instance.delete(`/product/${idToDelete}`, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        window.location.href =
+          whatToDelete === "product" ? "/admin/products" : "/admin/categories";
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -95,8 +109,8 @@ function EcomProvider({ children }) {
       setLoading(true);
       // const response = await axios.get("https://ecommerce-api-8ga2.onrender.com/api/product/?category=" + category);
       const response = await instance.get("/product/get/?category=" + category);
-      console.log(response.data);
-      setProductsByCat(response.data);
+      // console.log(response.data);
+      setProductsByCat(response.data.products);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -130,8 +144,6 @@ function EcomProvider({ children }) {
 
   // addToCart function
   async function addToCart(product) {
-
-
     try {
       const response = await instance.post(
         "/cart/add",
@@ -143,7 +155,6 @@ function EcomProvider({ children }) {
     } catch (error) {
       console.log("product not added to cart", error);
     }
-
 
     if (existInCart(product._id)) {
       // If the product is already in the cart, updates it quantity.
@@ -160,11 +171,6 @@ function EcomProvider({ children }) {
       setCart([...cart, obj]);
     }
   }
-
-
-
-
-
 
   // function to check whether product is there in the cart or not.
   function existInCart(id) {
@@ -209,6 +215,7 @@ function EcomProvider({ children }) {
         categories,
         productsByCat,
         dealProduct,
+        singleProduct,
         deleteProductOrCategory,
         fetchProduct,
         addToCart,
@@ -221,7 +228,8 @@ function EcomProvider({ children }) {
         fetchCategories,
         filterByCategory,
         fetchHotDeals,
-        fetchAllProducts
+        fetchAllProducts,
+        fetchSingleProduct,
       }}
     >
       {/* Below children represents <RouterProvider router={router} />  means every component rendered by RouterProvider (eg: First, Home, wishlist and so on) 
@@ -241,4 +249,3 @@ export function useEcom() {
 }
 
 export default EcomProvider;
-
