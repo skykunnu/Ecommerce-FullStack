@@ -21,9 +21,10 @@ function SingleProduct() {
     removeFromWishlist,
     addToWishlist,
     filterByCategory,
-    // productsByCat,
+    productsByCat,
     categories,
   } = useEcom();
+
 
   const { isUserLoggedIn } = useAuth();
 
@@ -33,26 +34,30 @@ function SingleProduct() {
     if (id) {
       fetchProduct(id);
     }
-    if (product.category) {
+    if (product?.products?.category) {
+      // console.log("Categories", categories);
       setCategoryName(
         categories.find((obj) => {
-          return obj._id === product.category;
+          return obj._id === product?.products?.category;
         }).name
       );
     }
-  }, [id, product.category]);
+  }, [id, product?.products?.category]);
 
   useEffect(() => {
     filterByCategory(categoryName);
   }, [categoryName]);
+
+  console.log(categoryName);
+  console.log(categories);
 
   async function fetchProduct(id) {
     try {
       setLoading(true);
       // const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product/${id}`);
       const response = await instance.get(`/product/get/${id}`);
-      setProduct(response.data[0]);
-      console.log(response.data[0]);
+      setProduct(response.data.products[0]);
+      // console.log(response.data.products[0]);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -88,35 +93,37 @@ function SingleProduct() {
       <div className="product flex gap-8 px-12 py-4">
         <div className="left w-1/4">
           <img
-            src={product.image}
+            src={product?.image}
             className="w-[15rem] h-[15rem] object-contain"
           />
         </div>
         <div className="right w-3/4 mt-3">
-          <h2 className="text-3xl font-bold py-4">{product.title}</h2>
+          <h2 className="text-3xl font-bold py-4">{product?.title}</h2>
 
           <div className="flex items-center  leading-none">
             <span className="text-lg font-medium">
               <MdOutlineCurrencyRupee />
             </span>
-            <span className="text-xl font-bold">{product.discountedPrice}</span>
+            <span className="text-xl font-bold">
+              {product?.discountedPrice}
+            </span>
           </div>
           <h2 className="my-2">
-            <strong>Brand:- </strong> {product.brand}
+            <strong>Brand:- </strong> {product?.brand}
           </h2>
           <h2>
-            <strong>Category:- </strong> {categoryName}
+            <strong>Category:- </strong> {product?.category?.name}
           </h2>
           <h2 className="flex my-2">
             <strong className="pr-1">Description:-</strong>{" "}
-            {product.description}
+            {product?.description}
           </h2>
 
           <div className="my-3 flex gap-2">
-            {existInWishlist(product._id) ? (
+            {existInWishlist(product?._id) ? (
               <button
                 className="bg-red-500 text-white  px-3 py-1 font-bold cursor-pointer rounded"
-                onClick={() => removeFromWishlist(product._id)}
+                onClick={() => removeFromWishlist(product?._id)}
               >
                 Remove From Wishlist
               </button>
@@ -128,10 +135,10 @@ function SingleProduct() {
                 Add to Wishlist
               </button>
             )}
-            {existInCart(product._id) ? (
+            {existInCart(product?._id) ? (
               <button
                 className="bg-red-500 text-white  px-3 py-1 font-bold cursor-pointer rounded"
-                onClick={() => removeFromCart(product._id)}
+                onClick={() => removeFromCart(product?._id)}
               >
                 Remove From Cart
               </button>
@@ -153,7 +160,7 @@ function SingleProduct() {
           <Loader />
         ) : (
           <DisplayProduct
-            // product={productsByCat.filter((item) => item._id !== product._id)}
+            product={productsByCat.filter((item) => item._id !== product?._id)}
           />
         )}
       </div>

@@ -11,7 +11,7 @@ function Home() {
 
 
 
-// useEffect is used to call fetchProducts when the components mounts (ie, when the Home Component is rendered for the first time.)
+// useEffect is used to call fetchAllProducts when the components mounts (ie, when the Home Component is rendered for the first time.)
   useEffect(() => {
     fetchAllProducts();
   }, []);

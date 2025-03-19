@@ -89,7 +89,7 @@ function EcomProvider({ children }) {
     }
   }
 
-  // filtering category
+  // filtering Products on the basis of category
   async function filterByCategory(category) {
     try {
       setLoading(true);
