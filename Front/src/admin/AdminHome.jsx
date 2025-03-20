@@ -4,7 +4,7 @@ import { useAdminEcom } from "./Context/AdminEcomProvider"
 
 function AdminHome() {
     const {count, getCount}=useAdminEcom();
-
+    console.log(count)
 
     useEffect(()=>{
         getCount();
@@ -36,7 +36,7 @@ function AdminHome() {
                 <p className='text-xl font-bold'>{count.products}</p>
                 <div className='flex gap-4'>
                     <Link to='/admin/products'>View Products</Link>
-                    <Link to='/admin/addProduct'>Add Product</Link>
+                    <Link to='/admin/AddProduct'>Add Product</Link>
                 </div>
             </div>
             <div className='bg-gray-200 p-4 rounded-lg'>

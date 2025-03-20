@@ -10,7 +10,7 @@ function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { cart, categories, fetchCategories } = useEcom();
   const { isUserLoggedIn, logout} = useAuth();
-  const {isAdminLoggedIn} = useAdminAuth();
+  const {isAdminLoggedIn, adminLogout} = useAdminAuth()
   // When the Header component mounts for the first time and also it is without dependency which means it will not run again unless the component is unmounted and remounted.
 
   useEffect(() => {
@@ -81,7 +81,7 @@ function Header() {
                   return (
                     <li key={index}>
                       <Link
-                        to={`/category/${category.name.toLowerCase()}`}
+                        to={`/category/${category._id}`}
                         onClick={()=>setDropdownOpen((prev)=>!prev)}
                         className="block w-full px-4 py-2 hover:bg-gray-500 dark:hover:bg-gray-600 dark:hover:text-white text-left"
                       >
@@ -93,9 +93,11 @@ function Header() {
             </ul>
           </div>
         </li>
-        {isUserLoggedIn || isAdminLoggedIn ? (
-          <Link onClick={logout} to={isUserLoggedIn ? `/user/login`:`/admin/login`}>Logout</Link>
-        ) : (
+        {isUserLoggedIn ? (
+          <Link onClick={logout} to={`/user/login`}>Logout</Link>
+        ) :  ( isAdminLoggedIn)? <Link onClick={adminLogout} to={`/admin/login`}>
+          Logout
+        </Link>:(
           <Link to="/user/login">Login</Link>
         )}
 

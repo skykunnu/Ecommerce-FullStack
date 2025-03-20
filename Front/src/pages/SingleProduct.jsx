@@ -12,24 +12,33 @@ function SingleProduct() {
     filterByCategory,
   } = useEcom();
 
-  console.log(productsByCat);
+  // console.log(productsByCat);
 
   const [categoryName, setCategoryName] = useState("");
+  const [similarProduct, setSimilarProduct] = useState([]);
+
   useEffect(() => {
     fetchSingleProduct(id);
-    
   }, []);
 
   useEffect(() => {
-    if (singleProduct && categories) {
       setCategoryName(
         categories.find((obj) => obj._id === singleProduct.category)?.name
       );
-    }
+    
     filterByCategory(singleProduct.category);
   }, [categories, singleProduct]);
 
-  console.log(singleProduct);
+  useEffect(() => {
+    fetchSimilarProduct();
+  }, [productsByCat, singleProduct]);
+
+  function fetchSimilarProduct() {
+    setSimilarProduct(
+      productsByCat.filter((item) => item._id !== singleProduct._id)
+    );
+  }
+
   return (
     <>
       {singleProduct && (
@@ -53,7 +62,16 @@ function SingleProduct() {
               <button>Add To Wishlist</button>
             </div>
           </div>
-          <div>SIMILAR PRODUCTS HERE</div>
+          <div>
+            <h1>SIMILAR PRODUCTS HERE</h1>
+          {similarProduct.map((item) => {
+            return (
+              <div key={item._id}>
+                <img src={item.image} />
+              </div>
+            );
+          })}
+          </div>
         </>
       )}
     </>

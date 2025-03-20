@@ -45,7 +45,6 @@ function EcomProvider({ children }) {
     try {
       const response = await instance.get(`/product/get/${id}`);
       setSingleProduct(response.data.products[0]);
-      console.log(response.data.products[0]);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +55,7 @@ function EcomProvider({ children }) {
       const response = await instance.get("/product/get?limit=-1", {
         withCredentials: true,
       });
-      setProduct(response.data);
+      setProduct(response.data.products);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -104,12 +103,10 @@ function EcomProvider({ children }) {
   }
 
   // filtering Products on the basis of category
-  async function filterByCategory(category) {
+  async function filterByCategory(categoryID) {
     try {
       setLoading(true);
-      // const response = await axios.get("https://ecommerce-api-8ga2.onrender.com/api/product/?category=" + category);
-      const response = await instance.get("/product/get/?category=" + category);
-      // console.log(response.data);
+      const response = await instance.get("/product/get/?category=" + categoryID);
       setProductsByCat(response.data.products);
     } catch (error) {
       console.log(error);

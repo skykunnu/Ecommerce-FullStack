@@ -31,7 +31,7 @@ async function checkAuthAdmin() {
     }
   }
 
-  async function logout() {
+  async function adminLogout() {
     try {
         await instance.post(
             "/admin/logout",
@@ -47,8 +47,12 @@ async function checkAuthAdmin() {
       console.log(error);
     }
   }
+
+
+
+
   return (
-    <AdminAuth.Provider value={{logout,isAdminLoggedIn,checkAuthAdmin,loggedInAdmin}}>{children}</AdminAuth.Provider>
+    <AdminAuth.Provider value={{adminLogout,isAdminLoggedIn,checkAuthAdmin,loggedInAdmin}}>{children}</AdminAuth.Provider>
   );
 }
 

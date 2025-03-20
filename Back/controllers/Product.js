@@ -11,8 +11,8 @@ export async function addProduct(req, res) {
     const secure_url = await uploadToCloudinary(req);
 
     // console.log("Secure URL:", secure_url);
-
-    const newProduct = new Product({ ...req.body, image: secure_url });
+    const categoryObjectID=new mongoose.Types.ObjectId(req.body.category)
+    const newProduct = new Product({ ...req.body, image: secure_url, category: categoryObjectID});
     await newProduct.save();
     res.status(201).send("Product Added");
   } catch (error) {
@@ -42,27 +42,27 @@ export async function fetchProduct(req, res) {
     }
 
     if (req.query.category) {
+  
       query.category = new mongoose.Types.ObjectId(req.query.category);
+      
     }
+    console.log(query)
     const page = req.query.page ? Number(req.query.page) : 1;
     const limit = Number(req.query.limit) === -1 ? 0 : 10;
     const skip = (page - 1) * limit;
 
-    // console.log(query);
+  
 
-    const products = await Product.find(query)
-      .skip(skip)
-      .limit(limit)
-      .populate("category");
+    const products = await Product.find(query).limit(limit).skip(skip);
+    
     const TotalCount = await Product.countDocuments(query);
 
-    // console.log(products);
 
     if (!products) {
       return res.status(500).send({ message: "No products Data found" });
     }
 
-    res.send({
+    return res.send({
       products,
       currentPage: page,
       totalPage: Math.ceil(TotalCount / limit),

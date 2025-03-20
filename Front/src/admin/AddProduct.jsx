@@ -81,7 +81,7 @@ function AddProduct() {
       action=""
       onSubmit={handleSubmit}
       encType="multipart/form-data"
-      className="flex flex-col gap-3 items-center justify-between"
+      className="flex flex-col gap-3 items-center justify-between space-y-6"
     >
       <input
         type="text"
@@ -89,7 +89,8 @@ function AddProduct() {
         name="title"
         value={form.title}
         onChange={handleChange}
-        className="border"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
+        autoFocus
       />
       <input
         type="text"
@@ -97,14 +98,14 @@ function AddProduct() {
         name="brand"
         value={form.brand}
         onChange={handleChange}
-        className="border"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       />
       <select
         name="category"
         id=""
         value={form.category}
         onChange={handleChange}
-        className="border px-4"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       >
         <option value="" selected disabled placeholder="Select Category">
           Select Category
@@ -123,11 +124,11 @@ function AddProduct() {
         name="OriginalPrice"
         value={form.OriginalPrice}
         onChange={handleChange}
-        className="border"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       />
-      <div>
+      <div className='flex gap-4'>
       <select name="discountType" 
-                value={form.discountType} onChange={handleChange} required >
+                value={form.discountType} onChange={handleChange} required className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" >
                 <option value="" selected disabled>Select discount type</option>
                 <option value="%"  > In Percentage</option>
                 <option value="inr"  >In Rupee</option>
@@ -144,7 +145,8 @@ function AddProduct() {
           value={form.discount}
           onChange={handleChange}
           onBlur={handleDiscountPriceChange}
-          className="border"
+          className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
         />
       </div>
 
@@ -154,7 +156,7 @@ function AddProduct() {
         name="discountedPrice"
         value={form.discountedPrice}
         onChange={handleChange}
-        className="border"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="text"
@@ -162,16 +164,16 @@ function AddProduct() {
         name="description"
         value={form.description}
         onChange={handleChange}
-        className="border"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       />
 
       <input
         type="file"
         name="image"
         onChange={handleChange}
-        className="ml-25"
+        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       />
-      <button type="submit" className="border px-2">
+      <button type="submit" className="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
         Submit
       </button>
     </form>

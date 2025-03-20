@@ -69,6 +69,7 @@ function AdminEcomProvider({children}) {
             const response= await instance.get("/admin/count",{
                 withCredentials:true,
             })
+            console.log(response.data)
             setCount(response.data.count);
         }catch(error){
             console.log(error);
