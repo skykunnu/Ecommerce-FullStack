@@ -1,43 +1,42 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useEcom } from "../Context/EcomProvider";
+import Loader from "../Components/Loader";
 
 function SingleProduct() {
   const { id } = useParams();
   const {
     fetchSingleProduct,
-    singleProduct,
-    categories,
-    productsByCat,
-    filterByCategory,
+    fetchCategories,
   } = useEcom();
 
-  // console.log(productsByCat);
 
   const [categoryName, setCategoryName] = useState("");
-  const [similarProduct, setSimilarProduct] = useState([]);
+  const [loading, setLoading]=useState(false);
+  const [categories, setCategories]=useState([]);
+  const [singleProduct, setSingleProduct]=useState([]);
+  // const [similarProduct, setSimilarProduct] = useState([]);
 
-  useEffect(() => {
-    fetchSingleProduct(id);
-  }, []);
+ useEffect(()=>{
+  fetchData();
+ },[id]); 
 
-  useEffect(() => {
-      setCategoryName(
-        categories.find((obj) => obj._id === singleProduct.category)?.name
-      );
-    
-    filterByCategory(singleProduct.category);
-  }, [categories, singleProduct]);
 
-  useEffect(() => {
-    fetchSimilarProduct();
-  }, [productsByCat, singleProduct]);
+ async function fetchData(){
+  setLoading(true);
+  const product=await fetchSingleProduct(id);
+  setSingleProduct(product);
+  const categories=await fetchCategories();
+  setCategories(categories);
+  setLoading(false);
+ }
 
-  function fetchSimilarProduct() {
-    setSimilarProduct(
-      productsByCat.filter((item) => item._id !== singleProduct._id)
-    );
-  }
+  useEffect(()=>{
+    setCategoryName(categories?.category?.find((obj)=>obj._id===singleProduct.category).name)
+  },[singleProduct,categories])
+
+
+if (loading) return <Loader />;
 
   return (
     <>
@@ -64,13 +63,13 @@ function SingleProduct() {
           </div>
           <div>
             <h1>SIMILAR PRODUCTS HERE</h1>
-          {similarProduct.map((item) => {
+          {/* {similarProduct.map((item) => {
             return (
               <div key={item._id}>
                 <img src={item.image} />
               </div>
             );
-          })}
+          })} */}
           </div>
         </>
       )}

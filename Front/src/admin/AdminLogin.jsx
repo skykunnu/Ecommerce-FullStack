@@ -36,7 +36,7 @@ function AdminLogin() {
         navigate("/admin/home");
       }
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   }
 

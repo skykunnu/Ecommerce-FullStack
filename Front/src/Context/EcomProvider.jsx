@@ -18,10 +18,7 @@ function EcomProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [productsByCat, setProductsByCat] = useState([]);
   const [dealProduct, setDealProduct] = useState([]);
-  const [singleProduct, setSingleProduct] = useState([]);
 
   // fetching all Products with only 10 products visible. 
   async function fetchProduct(page = null) {
@@ -44,9 +41,13 @@ function EcomProvider({ children }) {
   async function fetchSingleProduct(id) {
     try {
       const response = await instance.get(`/product/get/${id}`);
-      setSingleProduct(response.data.products[0]);
+      // setSingleProduct(response.data.products[0]);
+      return response.data.products[0]
     } catch (error) {
       console.log(error);
+      setLoading(false);
+    } finally{
+      setLoading(false);
     }
   }
 
@@ -93,7 +94,7 @@ function EcomProvider({ children }) {
       setLoading(true);
       // const response = await axios.get("https://ecommerce-api-8ga2.onrender.com/api/product/categories/all");
       const response = await instance.get("/product/category");
-      setCategories(response.data);
+      return response.data;
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -103,11 +104,12 @@ function EcomProvider({ children }) {
   }
 
   // filtering Products on the basis of category
-  async function filterByCategory(categoryID) {
+  async function filterByCategory(categoryID, isName) {
     try {
       setLoading(true);
-      const response = await instance.get("/product/get/?category=" + categoryID);
-      setProductsByCat(response.data.products);
+      const url=isName?"/product/get/?categoryName=":"/product/get/?category=";
+      const response=await instance.get(url+categoryID)
+      return response.data;
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -209,10 +211,7 @@ function EcomProvider({ children }) {
         cart,
         loading,
         wishlist,
-        categories,
-        productsByCat,
         dealProduct,
-        singleProduct,
         deleteProductOrCategory,
         fetchProduct,
         addToCart,

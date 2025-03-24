@@ -8,14 +8,19 @@ import {useAdminAuth} from "../admin/Context/AdminAuthProvider";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { cart, categories, fetchCategories } = useEcom();
+  const { cart, fetchCategories, wishlist } = useEcom();
   const { isUserLoggedIn, logout} = useAuth();
   const {isAdminLoggedIn, adminLogout} = useAdminAuth()
-  // When the Header component mounts for the first time and also it is without dependency which means it will not run again unless the component is unmounted and remounted.
+  const [categories, setCategories]=useState([]);
 
   useEffect(() => {
-    fetchCategories();
+    fetchData();
   }, []);
+
+  async function fetchData(){
+    const categories=await fetchCategories();
+    setCategories(categories.category);
+  }
 
   return (
     <div className="flex justify-between bg-amber-200 px-12 py-2 mb-4">
@@ -29,14 +34,20 @@ function Header() {
         <Link to="/">
           <li>Home</li>
         </Link>
+        <li className="md:px-2">
         <Link to="/wishlist">
-          <p className="flex items-center">
-            Wishlist{" "}
+          <p className="flex items-center relative">
+            Wishlist
+            <span className="absolute right-[-14px] top-[-9px] rounded-full bg-red-600 text-white px-[5px] mt-1 text-xs">
+                {wishlist.length > 0 ? wishlist.length : wishlist.length}
+            </span>
             <span className="px-1">
               <FaHeart />
             </span>
           </p>
         </Link>
+        </li>
+
         <li>
           <button
             id="dropdownDefaultButton"
@@ -81,7 +92,7 @@ function Header() {
                   return (
                     <li key={index}>
                       <Link
-                        to={`/category/${category._id}`}
+                        to={`/category/${category.name.toLowerCase()}`}
                         onClick={()=>setDropdownOpen((prev)=>!prev)}
                         className="block w-full px-4 py-2 hover:bg-gray-500 dark:hover:bg-gray-600 dark:hover:text-white text-left"
                       >
