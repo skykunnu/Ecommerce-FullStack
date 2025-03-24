@@ -29,7 +29,7 @@ function AdminEcomProvider({children}) {
         const response = await instance.get(`/product/get?page=${page}`, {
           withCredentials: true,
         });
-        
+        console.log("Fetch Product",response.data);
         setProduct(response.data);
       } catch (error) {
         console.log(error);
@@ -69,7 +69,7 @@ function AdminEcomProvider({children}) {
             const response= await instance.get("/admin/count",{
                 withCredentials:true,
             })
-            console.log(response.data)
+            
             setCount(response.data.count);
         }catch(error){
             console.log(error);

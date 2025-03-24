@@ -6,11 +6,11 @@ import mongoose from "mongoose";
 export async function addProduct(req, res) {
   try {
     const file = req.file;
-    // console.log(req.body);
+    
     if (!file) return res.status(404).send({ message: "File Not Found" });
     const secure_url = await uploadToCloudinary(req);
 
-    // console.log("Secure URL:", secure_url);
+    
     const categoryObjectID=new mongoose.Types.ObjectId(req.body.category)
     const newProduct = new Product({ ...req.body, image: secure_url, category: categoryObjectID});
     await newProduct.save();
@@ -46,7 +46,7 @@ export async function fetchProduct(req, res) {
       query.category = new mongoose.Types.ObjectId(req.query.category);
       
     }
-    console.log(query)
+    
     const page = req.query.page ? Number(req.query.page) : 1;
     const limit = Number(req.query.limit) === -1 ? 0 : 10;
     const skip = (page - 1) * limit;

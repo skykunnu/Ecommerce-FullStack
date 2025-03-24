@@ -4,7 +4,7 @@ import { useAdminEcom } from "./Context/AdminEcomProvider"
 
 function AdminHome() {
     const {count, getCount}=useAdminEcom();
-    console.log(count)
+    
 
     useEffect(()=>{
         getCount();

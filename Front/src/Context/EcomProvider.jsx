@@ -23,7 +23,7 @@ function EcomProvider({ children }) {
   const [dealProduct, setDealProduct] = useState([]);
   const [singleProduct, setSingleProduct] = useState([]);
 
-  // fetching all Products
+  // fetching all Products with only 10 products visible. 
   async function fetchProduct(page = null) {
     try {
       setLoading(true);

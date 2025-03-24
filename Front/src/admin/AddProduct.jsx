@@ -23,10 +23,15 @@ function AddProduct() {
   function handleChange(e) {
     if (e.target.name === "image") {
       setForm((form) => ({ ...form, image: e.target.files[0] }));
-    } else {
+    }
+    
+     
+    
+    else {
       const { name, value } = e.target;
       setForm((form) => ({ ...form, [name]: value })); // [name] is a variable which can be anything like title, category and so on.
     }
+  
   }
 
   function handleDiscountPriceChange(e) {
@@ -102,12 +107,11 @@ function AddProduct() {
       />
       <select
         name="category"
-        id=""
         value={form.category}
         onChange={handleChange}
         className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
       >
-        <option value="" selected disabled placeholder="Select Category">
+        <option selected disabled placeholder="Select Category">
           Select Category
         </option>
         {categories.map((category, index) => {
