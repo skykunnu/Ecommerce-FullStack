@@ -16,7 +16,7 @@ function EcomProvider({ children }) {
 
   const [product, setProduct] = useState([]);
   const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  // const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dealProduct, setDealProduct] = useState([]);
 
@@ -119,28 +119,26 @@ function EcomProvider({ children }) {
   }
 
   // addtowishlist function
-  function addToWishlist(product) {
-    if (existInWishlist(product._id)) {
-      alert("Already exist in wishlist");
-    } else {
-      const obj = { product };
-      setWishlist([...wishlist, obj]);
+  async function addToWishlist(productSlug) {
+    try{
+      if (await existInWishlist(productSlug)) {
+        alert("Already exist in wishlist");
+      } else {
+          const response=await instance.post("/user/addToWishlist",{productSlug},{withCredentials:true})
+              console.log(response)
+        }
+    }catch(error){
+      console.log(error)
     }
   }
 
   // function to check whether product is there in the wishlist or not.
-  function existInWishlist(id) {
-    const productAlreadyExists = wishlist.find(
-      (wishlistItem) => wishlistItem.product._id === id
-    );
-    return productAlreadyExists ? true : false;
+  async function existInWishlist(slug) {
+    const response=await instance.get(`/user/checkInWishlist/${slug}`,{withCredentials:true,});
+    return response.data.exists ? true : false;
   }
 
-  // function to remove item from wishlist.
-  function removeFromWishlist(id) {
-    setWishlist(wishlist.filter((item) => item.product._id !== id));
-  }
-
+  
   // addToCart function
   async function addToCart(product) {
     try {
@@ -210,7 +208,7 @@ function EcomProvider({ children }) {
         product,
         cart,
         loading,
-        wishlist,
+        // wishlist,
         dealProduct,
         deleteProductOrCategory,
         fetchProduct,
@@ -220,7 +218,6 @@ function EcomProvider({ children }) {
         updateQuantity,
         addToWishlist,
         existInWishlist,
-        removeFromWishlist,
         fetchCategories,
         filterByCategory,
         fetchHotDeals,

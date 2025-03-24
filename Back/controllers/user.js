@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import Product from "../models/ProductModel.js"
 
 export async function registerUser(req, res) {
   try {
@@ -56,15 +57,42 @@ export async function loginUser(req, res) {
 
 export async function checkInWishlist(req,res){
   try{
-    const {productId}=req.params;
-    const {userId}=req.body;
+    const {slug}=req.params;
+    const {id}= req.user;
 
-    const user=await User.findOneAndUpdate(userId,{$addToSet:{wishlist:productId},});
-  }
-  catch(error){
-    return res.status(500).send({
-      message:"Product not added to wishlist",
-      errorString: error.message,
+    const product=await Product.findOne({slug:slug});
+
+    const user=await User.findOne({
+      _id:id,
+      wishlist:{$in:[product._id]},
     });
+
+    if(user&&user._id){
+      return res.send({exists:true});
+    }
+    return res.send({exists:false});
+  } catch(error){
+    return res.status(500).send({errorString:error.message,})
+  }
+}
+
+
+export async function addToWishlist(req,res){
+  try{
+    const {productSlug}=req.body;
+    const {id}=req.user;
+
+    const product=await Product.findOne({slug:productSlug});
+    if(!product) return res.status(404).send({message:"Product not found"});
+
+    const user=await User.findByIdAndUpdate(
+      id, 
+      {$push:{wishlsit:product._id}},
+      {new:true}
+    );
+    if(!user) return res.status(404).send({message:"User not found"});
+    return res.send({message:"Product added to wishlist",user});
+  }catch(error){
+    return res.status(500).send({errorString:error.message,});
   }
 }

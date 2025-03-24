@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useEcom } from "../Context/EcomProvider";
 import Loader from "../Components/Loader";
+import { useAuth } from "../Context/AuthProvider";
+import {Link} from "react-router-dom"
 
 function SingleProduct() {
   const { id } = useParams();
   const {
     fetchSingleProduct,
     fetchCategories,
+    addToWishlist,
   } = useEcom();
 
+  const {isUserLoggedIn}=useAuth();
 
   const [categoryName, setCategoryName] = useState("");
   const [loading, setLoading]=useState(false);
@@ -36,6 +40,14 @@ function SingleProduct() {
   },[singleProduct,categories])
 
 
+ function handleAddToWishlist(){
+  isUserLoggedIn ? addToWishlist(singleProduct.slug):(window.location.href='/user/login?referer=/product/'+singleProduct.slug)
+ }
+
+
+
+
+
 if (loading) return <Loader />;
 
   return (
@@ -58,7 +70,9 @@ if (loading) return <Loader />;
               </p>
               <p>{singleProduct.description}</p>
               <button>Add To Cart</button>
-              <button>Add To Wishlist</button>
+              <Link className='rounded px-2 py-1 bg-blue-400 text-white' onClick={handleAddToWishlist}>
+              Add to Wishlist
+              </Link>
             </div>
           </div>
           <div>
