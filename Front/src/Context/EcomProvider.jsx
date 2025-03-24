@@ -16,18 +16,19 @@ function EcomProvider({ children }) {
 
   const [product, setProduct] = useState([]);
   const [cart, setCart] = useState([]);
-  // const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dealProduct, setDealProduct] = useState([]);
 
-  // fetching all Products with only 10 products visible. 
+  // fetching all Products with only 10 products visible.
   async function fetchProduct(page = null) {
+    // console.log("current page", page);
     try {
       setLoading(true);
-      // const response = await axios.get(`https://ecommerce-api-8ga2.onrender.com/api/product`);
-      const response = await instance.get(`/product/get?page=${page}`, {
-        withCredentials: true,
-      });
+      const response = await instance.get(
+        page ? `/product/get/?page=${page}` : `/product/get`,
+        { withCredentials: true }
+      );
 
       setProduct(response.data);
     } catch (error) {
@@ -42,11 +43,11 @@ function EcomProvider({ children }) {
     try {
       const response = await instance.get(`/product/get/${id}`);
       // setSingleProduct(response.data.products[0]);
-      return response.data.products[0]
+      return response.data.products[0];
     } catch (error) {
       console.log(error);
       setLoading(false);
-    } finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -104,11 +105,13 @@ function EcomProvider({ children }) {
   }
 
   // filtering Products on the basis of category
-  async function filterByCategory(categoryID, isName) {
+  async function filterByCategory(categoryName, isName) {
     try {
       setLoading(true);
-      const url=isName?"/product/get/?categoryName=":"/product/get/?category=";
-      const response=await instance.get(url+categoryID)
+      const url = isName
+        ? "/product/get/?categoryName="
+        : "/product/get/?category=";
+      const response = await instance.get(url + categoryName);
       return response.data;
     } catch (error) {
       console.log(error);
@@ -120,25 +123,30 @@ function EcomProvider({ children }) {
 
   // addtowishlist function
   async function addToWishlist(productSlug) {
-    try{
+    try {
       if (await existInWishlist(productSlug)) {
         alert("Already exist in wishlist");
       } else {
-          const response=await instance.post("/user/addToWishlist",{productSlug},{withCredentials:true})
-              console.log(response)
-        }
-    }catch(error){
-      console.log(error)
+        const response = await instance.post(
+          "/user/addToWishlist",
+          { productSlug },
+          { withCredentials: true }
+        );
+        console.log(response);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
   // function to check whether product is there in the wishlist or not.
   async function existInWishlist(slug) {
-    const response=await instance.get(`/user/checkInWishlist/${slug}`,{withCredentials:true,});
+    const response = await instance.get(`/user/checkInWishlist/${slug}`, {
+      withCredentials: true,
+    });
     return response.data.exists ? true : false;
   }
 
-  
   // addToCart function
   async function addToCart(product) {
     try {
@@ -184,6 +192,10 @@ function EcomProvider({ children }) {
     setCart(cart.filter((item) => item.product._id !== id));
   }
 
+  function removeFromWishlist(id) {
+    setWishlist(wishlist.filter((item) => item.product._id !== id));
+  }
+
   // function to update the quantity of the product.
   function updateQuantity(productId, sign) {
     if (!existInCart(productId)) {
@@ -208,12 +220,13 @@ function EcomProvider({ children }) {
         product,
         cart,
         loading,
-        // wishlist,
+        wishlist,
         dealProduct,
         deleteProductOrCategory,
         fetchProduct,
         addToCart,
         removeFromCart,
+        removeFromWishlist,
         existInCart,
         updateQuantity,
         addToWishlist,

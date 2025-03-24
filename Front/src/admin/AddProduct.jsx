@@ -102,8 +102,25 @@ function AddProduct() {
             name="title"
             value={form.title}
             onChange={handleChange}
+            onBlur={(e) =>
+              setForm((prev) => ({
+                ...prev,
+                slug: slugify(e.target.value, {
+                  lower: true,
+                  remove: /[*~+.()'"!:@/]/g,
+                }),
+              }))
+            }
             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             autoFocus
+          />
+          <input
+            type="text"
+            placeholder="Enter Product Slug"
+            name="title"
+            value={form.slug}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"

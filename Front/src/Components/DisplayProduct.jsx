@@ -4,14 +4,19 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 
 // It is receiving the {product} array as a prop from where it is being passed (ie Home component & ShopByCategory component)
 function DisplayProduct({ product }) {
+  // console.log("product", product);
   return (
     <div className="flex flex-wrap justify-center gap-16">
-      {product?.length > 0
-        ? product?.map((item) => {
+      {product?.products?.length > 0
+        ? product?.products?.map((item) => {
             // console.log(product)
             return (
               <div key={item._id} className="text-center">
-                <Link to={`/product/${item._id}`}>
+                <Link
+                  to={
+                    item.slug ? `/product/${item.slug}` : `/product/${item._id}`
+                  }
+                >
                   <img
                     src={item.image}
                     className="w-[14rem] h-[14rem] object-contain"
@@ -41,9 +46,6 @@ function DisplayProduct({ product }) {
                   </span>
                   <s>{item.OriginalPrice}</s>
                 </p>
-                <button className="rounded px-2 py-1 bg-blue-400 text-white">
-                  Add to Wishlist
-                </button>
               </div>
             );
           })

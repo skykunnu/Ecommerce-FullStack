@@ -6,13 +6,16 @@ import mongoose from "mongoose";
 export async function addProduct(req, res) {
   try {
     const file = req.file;
-    
+
     if (!file) return res.status(404).send({ message: "File Not Found" });
     const secure_url = await uploadToCloudinary(req);
 
-    
-    const categoryObjectID=new mongoose.Types.ObjectId(req.body.category)
-    const newProduct = new Product({ ...req.body, image: secure_url, category: categoryObjectID});
+    const categoryObjectID = new mongoose.Types.ObjectId(req.body.category);
+    const newProduct = new Product({
+      ...req.body,
+      image: secure_url,
+      category: categoryObjectID,
+    });
     await newProduct.save();
     res.status(201).send("Product Added");
   } catch (error) {
@@ -39,25 +42,28 @@ export async function fetchProduct(req, res) {
     let query = {};
     if (req.params.id) {
       // query._id = req.params.id;
-      query.slug=req.params.id;
+      query.slug = req.params.id;
     }
 
     if (req.query.category) {
-  
       query.category = new mongoose.Types.ObjectId(req.query.category);
-      
     }
-    
+
+    if(req.query.categoryName){
+      const category=await categoryModel.find({
+        name:{$regex: new RegExp(`^${req.query.categoryName}$`,"i")}
+      });
+      query.category=category[0]._id;
+    }
+
     const page = req.query.page ? Number(req.query.page) : 1;
-    const limit = Number(req.query.limit) === -1 ? 0 : 10;
+    // console.log("page in fetchProduct", page);
+    const limit = 10;
     const skip = (page - 1) * limit;
 
-  
-
     const products = await Product.find(query).limit(limit).skip(skip);
-    
-    const TotalCount = await Product.countDocuments(query);
 
+    const TotalCount = await Product.countDocuments(query);
 
     if (!products) {
       return res.status(500).send({ message: "No products Data found" });
@@ -77,28 +83,27 @@ export async function fetchProduct(req, res) {
 }
 
 export async function fetchCategories(req, res) {
-  
-  try{
-    let query={};
+  try {
+    let query = {};
 
-    const page=req.query.page?Number(req.query.page):1;
-    const limit=10;
-    const skip=(page-1)*limit;
+    const page = req.query.page ? Number(req.query.page) : 1;
+    // console.log("page in fetchCategories", page);
+    const limit = 10;
+    const skip = (page - 1) * limit;
 
-    const category=await categoryModel.find(query).skip(skip).limit(limit);
-    const TotalCount=await categoryModel.countDocuments(query);
+    const category = await categoryModel.find(query).skip(skip).limit(limit);
+    const TotalCount = await categoryModel.countDocuments(query);
 
-    if(!category)
-      return res.status(400).send({message:"No Categories found"});
-    
+    if (!category)
+      return res.status(400).send({ message: "No Categories found" });
+
     res.send({
       category,
-      currentPage:page,
-      totalPage:Math.ceil(TotalCount/limit),
+      currentPage: page,
+      totalPage: Math.ceil(TotalCount / limit),
     });
-
-  }catch(error){
-    res.status(500).send({message:error.message});
+  } catch (error) {
+    res.status(500).send({ message: error.message });
   }
 }
 
@@ -106,10 +111,10 @@ export async function addCategory(req, res) {
   try {
     const file = req.file;
     if (!file) return res.status(404).send({ message: "File Not Found" });
-    
-    const exists=await categoryModel.find({name:req.body.name});
-    if(exists.length>0)
-      return res.status(400).send({message:"Category Already Exists"});
+
+    const exists = await categoryModel.find({ name: req.body.name });
+    if (exists.length > 0)
+      return res.status(400).send({ message: "Category Already Exists" });
     const secure_url = await uploadToCloudinary(req);
 
     const newCategory = new categoryModel({ ...req.body, image: secure_url });
