@@ -5,6 +5,6 @@ const userRouter=express.Router();
 
 userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
-userRouter.get("/checkInWishlist/:productSlug",check,checkInWishlist);
-userRouter.get("/addToWishlist/",check,addToWishlist);
+userRouter.get("/checkInWishlist/:slug",check,checkInWishlist);
+userRouter.post("/addToWishlist/",check,addToWishlist);
 export default userRouter;

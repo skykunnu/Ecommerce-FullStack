@@ -60,6 +60,7 @@ export async function checkInWishlist(req,res){
     const {slug}=req.params;
     const {id}= req.user;
 
+
     const product=await Product.findOne({slug:slug});
 
     const user=await User.findOne({
@@ -82,12 +83,14 @@ export async function addToWishlist(req,res){
     const {productSlug}=req.body;
     const {id}=req.user;
 
+
+
     const product=await Product.findOne({slug:productSlug});
     if(!product) return res.status(404).send({message:"Product not found"});
 
     const user=await User.findByIdAndUpdate(
       id, 
-      {$push:{wishlsit:product._id}},
+      {$push:{wishlist:product._id}},
       {new:true}
     );
     if(!user) return res.status(404).send({message:"User not found"});
