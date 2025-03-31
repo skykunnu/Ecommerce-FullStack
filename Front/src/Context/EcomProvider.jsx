@@ -20,6 +20,8 @@ function EcomProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [dealProduct, setDealProduct] = useState([]);
 
+
+
   // fetching all Products with only 10 products visible.
   async function fetchProduct(page = null) {
     // console.log("current page", page);
@@ -121,6 +123,18 @@ function EcomProvider({ children }) {
     }
   }
 
+  async function fetchWishlist(){
+    try{
+      const response=await instance.get('/user/getWishlist',{withCredentials:true});
+    
+    return response.data.wishlist;
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
+
+
   // addtowishlist function
   async function addToWishlist(productSlug) {
     try {
@@ -132,8 +146,12 @@ function EcomProvider({ children }) {
           { productSlug },
           { withCredentials: true }
         );
-        console.log(response);
+        if(response.status===200){
+          setWishlist([...wishlist,response.data.wishlist])
+        }
       }
+    console.log(wishlist)
+
     } catch (error) {
       console.log(error);
     }
@@ -223,6 +241,7 @@ function EcomProvider({ children }) {
         wishlist,
         dealProduct,
         deleteProductOrCategory,
+        fetchWishlist,
         fetchProduct,
         addToCart,
         removeFromCart,

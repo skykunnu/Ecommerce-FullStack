@@ -44,6 +44,9 @@ function SingleProduct() {
   isUserLoggedIn ? addToWishlist(singleProduct.slug):(window.location.href='/user/login?referer=/product/'+singleProduct.slug)
  }
 
+ function handleAddToCart(){
+
+ }
 
 
 
@@ -54,25 +57,32 @@ if (loading) return <Loader />;
     <>
       {singleProduct && (
         <>
-          <div>
+          <div className='flex items-center gap-10'>
             <div className="left">
               <img src={singleProduct.image} />
             </div>
             <div className="right">
-              <h2>{singleProduct.title}</h2>
-              <p>
-                <strong>Brand:</strong>
+              <span className='flex py-2'>
+            <span className='text-4xl'>{singleProduct.brand}</span><h1 className='text-4xl px-2'>{singleProduct.title}</h1>
+              </span>
+              <div>
+                <strong>Brand:-</strong>
                 {singleProduct.brand}
-              </p>
-              <p>
-                <strong>Category:</strong>
+              </div>
+              <div>
+                <strong>Category:-</strong>
                 {categoryName}
-              </p>
-              <p>{singleProduct.description}</p>
-              <button>Add To Cart</button>
+              </div>
+              <div>
+                <strong>Description:-</strong>
+                {singleProduct.description}
+              </div>
+              <div className='flex gap-3 py-2'>
+              <Link className='rounded px-2 py-1 bg-blue-400 text-white' onClick={handleAddToCart}>Add To Cart</Link>
               <Link className='rounded px-2 py-1 bg-blue-400 text-white' onClick={handleAddToWishlist}>
               Add to Wishlist
               </Link>
+              </div>
             </div>
           </div>
           <div>

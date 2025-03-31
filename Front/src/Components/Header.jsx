@@ -8,10 +8,12 @@ import { useAdminAuth } from "../admin/Context/AdminAuthProvider";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { cart, fetchCategories, wishlist } = useEcom();
+  const { cart, fetchCategories, fetchWishlist } = useEcom();
   const { isUserLoggedIn, logout } = useAuth();
   const { isAdminLoggedIn, adminLogout } = useAdminAuth();
   const [categories, setCategories] = useState([]);
+  const [wishlist, setWishlist]=useState([])
+  console.log(wishlist);
   useEffect(() => {
     fetchData();
   }, []);
@@ -19,6 +21,8 @@ function Header() {
   async function fetchData() {
     const categories = await fetchCategories();
     setCategories(categories.category);
+    const data=await fetchWishlist();
+    setWishlist(data);
   }
 
   return (
@@ -37,8 +41,8 @@ function Header() {
           <Link to="/wishlist">
             <p className="flex items-center relative">
               Wishlist
-              <span className="absolute right-[-14px] top-[-9px] rounded-full bg-red-600 text-white px-[5px] mt-1 text-xs">
-                {wishlist.length > 0 ? wishlist.length : wishlist.length}
+              <span className="absolute right-[-10px] top-[-9px] rounded-full bg-red-600 text-white px-[5px] mt-1 text-xs">
+                {wishlist?.length}
               </span>
               <span className="px-1">
                 <FaHeart />

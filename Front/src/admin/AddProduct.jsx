@@ -4,6 +4,7 @@ import slugify from "slugify";
 import instance from "../axiosConfig";
 import { useEcom } from "../Context/EcomProvider";
 
+
 function AddProduct() {
   const { fetchCategories } = useEcom();
   const [categories, setCategories] = useState([]);
@@ -136,7 +137,7 @@ function AddProduct() {
             onChange={handleChange}
             className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           >
-            <option selected disabled placeholder="Select Category">
+            <option value="" disabled placeholder="Select Category">
               Select Category
             </option>
             {categories.map((category, index) => {

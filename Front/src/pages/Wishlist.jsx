@@ -4,6 +4,7 @@ import { MdOutlineCurrencyRupee } from "react-icons/md";
 
 function Wishlist() {
   const { wishlist } = useEcom(); // this useEcom is nothing but say useContext(ecomContext). 
+  console.log(wishlist);
 
   return (
     <div>
