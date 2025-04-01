@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 function SingleProduct() {
   const { id } = useParams();
-  const { fetchSingleProduct, fetchCategories, addToWishlist } = useEcom();
+  const { fetchSingleProduct, fetchCategories, addToWishlist, addToCart } = useEcom();
 
   const { isUserLoggedIn } = useAuth();
 
@@ -44,7 +44,9 @@ function SingleProduct() {
           "/user/login?referer=/product/" + singleProduct.slug);
   }
 
-  function handleAddToCart() {}
+  function handleAddToCart() {
+    isUserLoggedIn?addToCart(singleProduct.slug):(window.location.href="/user/login?referer=/product/" + singleProduct.slug);
+  }
 
   if (loading) return <Loader />;
 

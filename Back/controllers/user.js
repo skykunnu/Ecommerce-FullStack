@@ -65,19 +65,12 @@ export async function checkInWishlist(req, res) {
     const { slug } = req.params;
     const { id } = req.user;
 
-    // console.log("slug", slug);
-    // console.log("id", id);
-
     const product = await Product.findOne({ slug: slug });
-
-    // console.log(product);
 
     const user = await User.findOne({
       _id: id,
       wishlist: { $in: [product._id] },
     });
-
-    // console.log(user);
 
     if (user && user._id) {
       return res.send({ exists: true });
@@ -92,12 +85,7 @@ export async function addToWishlist(req, res) {
   try {
     const { productSlug } = req.body;
     const { id } = req.user;
-
-    // console.log("productSlug", productSlug)
-    // console.log("id", id)
-
     const product = await Product.findOne({ slug: productSlug });
-    // console.log(product);
     if (!product) return res.status(404).send({ message: "Product not found" });
 
     const user = await User.findByIdAndUpdate(
@@ -105,7 +93,6 @@ export async function addToWishlist(req, res) {
       { $push: { wishlist: product._id } },
       { new: true }
     );
-    // console.log(user);
     if (!user) return res.status(404).send({ message: "User not found" });
     return res.send({ message: "Product added to wishlist", user });
   } catch (error) {
@@ -117,7 +104,6 @@ export async function getWishlist(req, res) {
   try {
     const { id } = req.user;
     const user = await User.findById(id);
-    // console.log(user);
     if (!user) return res.status(404).send({ message: "User not found" });
 
     if (user.wishlist.length > 0) {

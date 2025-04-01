@@ -13,7 +13,7 @@ function Header() {
   const { isAdminLoggedIn, adminLogout } = useAdminAuth();
   const [categories, setCategories] = useState([]);
   const [wishlist, setWishlist]=useState([])
-  console.log(wishlist);
+  // console.log(wishlist);
   useEffect(() => {
     fetchData();
   }, []);

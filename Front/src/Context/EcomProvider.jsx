@@ -15,7 +15,6 @@ function EcomProvider({ children }) {
   // when any setstate (ex setCart, setWishlist and so on) is called , React re-renders any components that consume the (cart, wishlist) state (via the useEcom hook. )
 
   const [product, setProduct] = useState([]);
-  // const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dealProduct, setDealProduct] = useState([]);
 
@@ -126,11 +125,19 @@ function EcomProvider({ children }) {
         withCredentials: true,
       });
 
-      console.log(response.data.wishlist);
+      // console.log(response.data.wishlist);
       return response.data.wishlist;
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async function existInWishlist(slug) {
+    const response = await instance.get(`/user/checkInWishlist/${slug}`, {
+      withCredentials: true,
+    });
+    // console.log("response.data.exists", response.data.exists);
+    return response.data.exists ? true : false;
   }
 
   // addtowishlist function
@@ -155,98 +162,57 @@ function EcomProvider({ children }) {
     }
   }
 
-
-  // function to check whether product is there in the wishlist or not.
-  async function existInWishlist(slug) {
-    const response = await instance.get(`/user/checkInWishlist/${slug}`, {
-      withCredentials: true,
-    });
-    // console.log("response.data.exists", response.data.exists);
-    return response.data.exists ? true : false;
+  async function addToCart(productSlug) {
+    try {
+      if (existInCart(productSlug)) {
+        alert("Already exist in cart");
+      } else {
+        const response = await instance.post(
+          "/cart/addToCart",
+          { productSlug: productSlug, quantity: 1 },
+          { withCredentials: true }
+        );
+        console.log("Cart updated", response.data);
+        if (response.status === 200) {
+          return response.data;
+        }
+      }
+    } catch (error) {
+      console.log("product not added to cart", error);
+    }
   }
 
-  // addToCart function
-  // async function addToCart(product) {
-  //   try {
-  //     const response = await instance.post(
-  //       "/cart/add",
-  //       { product: product._id, quantity: 1 },
-  //       { withCredentials: true }
-  //     );
-  //     console.log("Cart updated", response.data);
-  //     addToCart(response.data);
-  //   } catch (error) {
-  //     console.log("product not added to cart", error);
-  //   }
-
-  //   if (existInCart(product._id)) {
-  //     // If the product is already in the cart, updates it quantity.
-  //     setCart(
-  //       cart.map((cartItem) =>
-  //         cartItem.product._id === product._id
-  //           ? { ...cartItem, quantity: Number(cartItem.quantity) }
-  //           : cartItem
-  //       )
-  //     );
-  //     // If the product is not in the cart, add it with the quantity 1.
-  //   } else {
-  //     const obj = { product, quantity: 1 };
-  //     setCart([...cart, obj]);
-  //   }
-  // }
-
   // function to check whether product is there in the cart or not.
-  // function existInCart(id) {
-  //   // find () searches the array to find the first product that matches with the given id.
-  //   const productAlreadyExists = cart.find(
-  //     (cartItem) => cartItem.product._id === id
-  //   );
-  //   return productAlreadyExists ? true : false;
-  // }
+  async function existInCart(slug) {
+    const response = await instance.get(`cart/checkInCart/${slug}`, {
+      withCredentials: true,
+    });
+    return response.status === 400 ? true : false;
+  }
 
-  // // function to remove item from cart.
-  // function removeFromCart(id) {
-  //   // filter function returns all those product whose id is not equal to given id in form of an array.
-  //   setCart(cart.filter((item) => item.product._id !== id));
-  // }
-
-  // function removeFromWishlist(id) {
-  //   // setWishlist(wishlist.filter((item) => item.product._id !== id));
-  // }
-
-  // // function to update the quantity of the product.
-  // function updateQuantity(productId, sign) {
-  //   if (!existInCart(productId)) {
-  //     alert("Incorrect Id");
-  //   }
-  //   setCart(
-  //     cart.map((cartItem) =>
-  //       cartItem.product._id === productId
-  //         ? {
-  //             ...cartItem,
-  //             quantity: cartItem.quantity + (sign === "+" ? 1 : -1),
-  //           }
-  //         : cartItem
-  //     )
-  //   );
-  // }
+  async function fetchCart() {
+    try {
+      const response = await instance.get("/cart/fetchCart", {
+        withCredentials: true,
+      });
+      // console.log(response);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <ecomContext.Provider
       // below is the shared state and functions
       value={{
         product,
-        // cart,
         loading,
         dealProduct,
         deleteProductOrCategory,
         fetchWishlist,
         fetchProduct,
-        // addToCart,
-        // removeFromCart,
-        // removeFromWishlist,
-        // existInCart,
-        // updateQuantity,
+        addToCart,
         addToWishlist,
         existInWishlist,
         fetchCategories,
@@ -254,6 +220,7 @@ function EcomProvider({ children }) {
         fetchHotDeals,
         fetchAllProducts,
         fetchSingleProduct,
+        fetchCart,
       }}
     >
       {/* Below children represents <RouterProvider router={router} />  means every component rendered by RouterProvider (eg: First, Home, wishlist and so on) 
