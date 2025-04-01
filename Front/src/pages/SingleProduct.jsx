@@ -3,67 +3,63 @@ import { useParams } from "react-router-dom";
 import { useEcom } from "../Context/EcomProvider";
 import Loader from "../Components/Loader";
 import { useAuth } from "../Context/AuthProvider";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 function SingleProduct() {
   const { id } = useParams();
-  const {
-    fetchSingleProduct,
-    fetchCategories,
-    addToWishlist,
-  } = useEcom();
+  const { fetchSingleProduct, fetchCategories, addToWishlist } = useEcom();
 
-  const {isUserLoggedIn}=useAuth();
+  const { isUserLoggedIn } = useAuth();
 
   const [categoryName, setCategoryName] = useState("");
-  const [loading, setLoading]=useState(false);
-  const [categories, setCategories]=useState([]);
-  const [singleProduct, setSingleProduct]=useState([]);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [singleProduct, setSingleProduct] = useState([]);
   // const [similarProduct, setSimilarProduct] = useState([]);
 
- useEffect(()=>{
-  fetchData();
- },[id]); 
+  useEffect(() => {
+    fetchData();
+  }, [id]);
 
+  async function fetchData() {
+    setLoading(true);
+    const product = await fetchSingleProduct(id);
+    setSingleProduct(product);
+    const categories = await fetchCategories();
+    setCategories(categories);
+    setLoading(false);
+  }
 
- async function fetchData(){
-  setLoading(true);
-  const product=await fetchSingleProduct(id);
-  setSingleProduct(product);
-  const categories=await fetchCategories();
-  setCategories(categories);
-  setLoading(false);
- }
+  useEffect(() => {
+    setCategoryName(
+      categories?.category?.find((obj) => obj._id === singleProduct.category)
+        .name
+    );
+  }, [singleProduct, categories]);
 
-  useEffect(()=>{
-    setCategoryName(categories?.category?.find((obj)=>obj._id===singleProduct.category).name)
-  },[singleProduct,categories])
+  function handleAddToWishlist() {
+    isUserLoggedIn
+      ? addToWishlist(singleProduct.slug)
+      : (window.location.href =
+          "/user/login?referer=/product/" + singleProduct.slug);
+  }
 
+  function handleAddToCart() {}
 
- function handleAddToWishlist(){
-  isUserLoggedIn ? addToWishlist(singleProduct.slug):(window.location.href='/user/login?referer=/product/'+singleProduct.slug)
- }
-
- function handleAddToCart(){
-
- }
-
-
-
-
-if (loading) return <Loader />;
+  if (loading) return <Loader />;
 
   return (
     <>
       {singleProduct && (
         <>
-          <div className='flex items-center gap-10'>
+          <div className="flex items-center gap-10">
             <div className="left">
               <img src={singleProduct.image} />
             </div>
             <div className="right">
-              <span className='flex py-2'>
-            <span className='text-4xl'>{singleProduct.brand}</span><h1 className='text-4xl px-2'>{singleProduct.title}</h1>
+              <span className="flex py-2">
+                <span className="text-4xl">{singleProduct.brand}</span>
+                <h1 className="text-4xl px-2">{singleProduct.title}</h1>
               </span>
               <div>
                 <strong>Brand:-</strong>
@@ -77,17 +73,25 @@ if (loading) return <Loader />;
                 <strong>Description:-</strong>
                 {singleProduct.description}
               </div>
-              <div className='flex gap-3 py-2'>
-              <Link className='rounded px-2 py-1 bg-blue-400 text-white' onClick={handleAddToCart}>Add To Cart</Link>
-              <Link className='rounded px-2 py-1 bg-blue-400 text-white' onClick={handleAddToWishlist}>
-              Add to Wishlist
-              </Link>
+              <div className="flex gap-3 py-2">
+                <Link
+                  className="rounded px-2 py-1 bg-blue-400 text-white"
+                  onClick={handleAddToCart}
+                >
+                  Add To Cart
+                </Link>
+                <Link
+                  className="rounded px-2 py-1 bg-blue-400 text-white"
+                  onClick={handleAddToWishlist}
+                >
+                  Add to Wishlist
+                </Link>
               </div>
             </div>
           </div>
           <div>
             <h1>SIMILAR PRODUCTS HERE</h1>
-          {/* {similarProduct.map((item) => {
+            {/* {similarProduct.map((item) => {
             return (
               <div key={item._id}>
                 <img src={item.image} />

@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
   wishlist: [
     {
       type:mongoose.Schema.Types.ObjectID,
-      ref:"products",
+      ref:"product",
     },
   ],
   role:{

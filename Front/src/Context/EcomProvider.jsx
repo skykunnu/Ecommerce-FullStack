@@ -15,12 +15,9 @@ function EcomProvider({ children }) {
   // when any setstate (ex setCart, setWishlist and so on) is called , React re-renders any components that consume the (cart, wishlist) state (via the useEcom hook. )
 
   const [product, setProduct] = useState([]);
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  // const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dealProduct, setDealProduct] = useState([]);
-
-
 
   // fetching all Products with only 10 products visible.
   async function fetchProduct(page = null) {
@@ -123,17 +120,18 @@ function EcomProvider({ children }) {
     }
   }
 
-  async function fetchWishlist(){
-    try{
-      const response=await instance.get('/user/getWishlist',{withCredentials:true});
-    
-    return response.data.wishlist;
-    }
-    catch(error){
+  async function fetchWishlist() {
+    try {
+      const response = await instance.get("/user/getWishlist", {
+        withCredentials: true,
+      });
+
+      console.log(response.data.wishlist);
+      return response.data.wishlist;
+    } catch (error) {
       console.log(error);
     }
   }
-
 
   // addtowishlist function
   async function addToWishlist(productSlug) {
@@ -146,108 +144,109 @@ function EcomProvider({ children }) {
           { productSlug },
           { withCredentials: true }
         );
-        if(response.status===200){
-          setWishlist([...wishlist,response.data.wishlist])
+        console.log(response);
+        if (response.status === 200) {
+          return response.data.user.wishlist;
         }
       }
-    console.log(wishlist)
-
+      // console.log(wishlist);
     } catch (error) {
       console.log(error);
     }
   }
+
 
   // function to check whether product is there in the wishlist or not.
   async function existInWishlist(slug) {
     const response = await instance.get(`/user/checkInWishlist/${slug}`, {
       withCredentials: true,
     });
+    // console.log("response.data.exists", response.data.exists);
     return response.data.exists ? true : false;
   }
 
   // addToCart function
-  async function addToCart(product) {
-    try {
-      const response = await instance.post(
-        "/cart/add",
-        { product: product._id, quantity: 1 },
-        { withCredentials: true }
-      );
-      console.log("Cart updated", response.data);
-      addToCart(response.data);
-    } catch (error) {
-      console.log("product not added to cart", error);
-    }
+  // async function addToCart(product) {
+  //   try {
+  //     const response = await instance.post(
+  //       "/cart/add",
+  //       { product: product._id, quantity: 1 },
+  //       { withCredentials: true }
+  //     );
+  //     console.log("Cart updated", response.data);
+  //     addToCart(response.data);
+  //   } catch (error) {
+  //     console.log("product not added to cart", error);
+  //   }
 
-    if (existInCart(product._id)) {
-      // If the product is already in the cart, updates it quantity.
-      setCart(
-        cart.map((cartItem) =>
-          cartItem.product._id === product._id
-            ? { ...cartItem, quantity: Number(cartItem.quantity) }
-            : cartItem
-        )
-      );
-      // If the product is not in the cart, add it with the quantity 1.
-    } else {
-      const obj = { product, quantity: 1 };
-      setCart([...cart, obj]);
-    }
-  }
+  //   if (existInCart(product._id)) {
+  //     // If the product is already in the cart, updates it quantity.
+  //     setCart(
+  //       cart.map((cartItem) =>
+  //         cartItem.product._id === product._id
+  //           ? { ...cartItem, quantity: Number(cartItem.quantity) }
+  //           : cartItem
+  //       )
+  //     );
+  //     // If the product is not in the cart, add it with the quantity 1.
+  //   } else {
+  //     const obj = { product, quantity: 1 };
+  //     setCart([...cart, obj]);
+  //   }
+  // }
 
   // function to check whether product is there in the cart or not.
-  function existInCart(id) {
-    // find () searches the array to find the first product that matches with the given id.
-    const productAlreadyExists = cart.find(
-      (cartItem) => cartItem.product._id === id
-    );
-    return productAlreadyExists ? true : false;
-  }
+  // function existInCart(id) {
+  //   // find () searches the array to find the first product that matches with the given id.
+  //   const productAlreadyExists = cart.find(
+  //     (cartItem) => cartItem.product._id === id
+  //   );
+  //   return productAlreadyExists ? true : false;
+  // }
 
-  // function to remove item from cart.
-  function removeFromCart(id) {
-    // filter function returns all those product whose id is not equal to given id in form of an array.
-    setCart(cart.filter((item) => item.product._id !== id));
-  }
+  // // function to remove item from cart.
+  // function removeFromCart(id) {
+  //   // filter function returns all those product whose id is not equal to given id in form of an array.
+  //   setCart(cart.filter((item) => item.product._id !== id));
+  // }
 
-  function removeFromWishlist(id) {
-    setWishlist(wishlist.filter((item) => item.product._id !== id));
-  }
+  // function removeFromWishlist(id) {
+  //   // setWishlist(wishlist.filter((item) => item.product._id !== id));
+  // }
 
-  // function to update the quantity of the product.
-  function updateQuantity(productId, sign) {
-    if (!existInCart(productId)) {
-      alert("Incorrect Id");
-    }
-    setCart(
-      cart.map((cartItem) =>
-        cartItem.product._id === productId
-          ? {
-              ...cartItem,
-              quantity: cartItem.quantity + (sign === "+" ? 1 : -1),
-            }
-          : cartItem
-      )
-    );
-  }
+  // // function to update the quantity of the product.
+  // function updateQuantity(productId, sign) {
+  //   if (!existInCart(productId)) {
+  //     alert("Incorrect Id");
+  //   }
+  //   setCart(
+  //     cart.map((cartItem) =>
+  //       cartItem.product._id === productId
+  //         ? {
+  //             ...cartItem,
+  //             quantity: cartItem.quantity + (sign === "+" ? 1 : -1),
+  //           }
+  //         : cartItem
+  //     )
+  //   );
+  // }
 
   return (
     <ecomContext.Provider
       // below is the shared state and functions
       value={{
         product,
-        cart,
+        // cart,
         loading,
-        wishlist,
         dealProduct,
         deleteProductOrCategory,
         fetchWishlist,
         fetchProduct,
-        addToCart,
-        removeFromCart,
-        removeFromWishlist,
-        existInCart,
-        updateQuantity,
+        // addToCart,
+        // removeFromCart,
+        // removeFromWishlist,
+        // existInCart,
+        // updateQuantity,
         addToWishlist,
         existInWishlist,
         fetchCategories,

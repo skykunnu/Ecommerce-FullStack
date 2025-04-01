@@ -1,14 +1,19 @@
 import bcrypt from "bcrypt";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
-import Product from "../models/ProductModel.js"
+import Product from "../models/ProductModel.js";
 
 export async function registerUser(req, res) {
   try {
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ name, email, password: hashedPassword, role:'user' });
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role: "user",
+    });
     await newUser.save();
 
     res.status(201).send({ message: "User registered", user: newUser });
@@ -55,60 +60,75 @@ export async function loginUser(req, res) {
   }
 }
 
-export async function checkInWishlist(req,res){
-  try{
-    const {slug}=req.params;
-    const {id}= req.user;
+export async function checkInWishlist(req, res) {
+  try {
+    const { slug } = req.params;
+    const { id } = req.user;
 
+    // console.log("slug", slug);
+    // console.log("id", id);
 
-    const product=await Product.findOne({slug:slug});
+    const product = await Product.findOne({ slug: slug });
 
-    const user=await User.findOne({
-      _id:id,
-      wishlist:{$in:[product._id]},
+    // console.log(product);
+
+    const user = await User.findOne({
+      _id: id,
+      wishlist: { $in: [product._id] },
     });
 
-    if(user&&user._id){
-      return res.send({exists:true});
+    // console.log(user);
+
+    if (user && user._id) {
+      return res.send({ exists: true });
     }
-    return res.send({exists:false});
-  } catch(error){
-    return res.status(500).send({errorString:error.message,})
+    return res.send({ exists: false });
+  } catch (error) {
+    return res.status(500).send({ errorString: error.message });
   }
 }
 
+export async function addToWishlist(req, res) {
+  try {
+    const { productSlug } = req.body;
+    const { id } = req.user;
 
-export async function addToWishlist(req,res){
-  try{
-    const {productSlug}=req.body;
-    const {id}=req.user;
+    // console.log("productSlug", productSlug)
+    // console.log("id", id)
 
+    const product = await Product.findOne({ slug: productSlug });
+    // console.log(product);
+    if (!product) return res.status(404).send({ message: "Product not found" });
 
-
-    const product=await Product.findOne({slug:productSlug});
-    if(!product) return res.status(404).send({message:"Product not found"});
-
-    const user=await User.findByIdAndUpdate(
-      id, 
-      {$push:{wishlist:product._id}},
-      {new:true}
+    const user = await User.findByIdAndUpdate(
+      id,
+      { $push: { wishlist: product._id } },
+      { new: true }
     );
-    if(!user) return res.status(404).send({message:"User not found"});
-    return res.send({message:"Product added to wishlist",user});
-  }catch(error){
-    return res.status(500).send({errorString:error.message,});
+    // console.log(user);
+    if (!user) return res.status(404).send({ message: "User not found" });
+    return res.send({ message: "Product added to wishlist", user });
+  } catch (error) {
+    return res.status(500).send({ errorString: error.message });
   }
 }
 
+export async function getWishlist(req, res) {
+  try {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    // console.log(user);
+    if (!user) return res.status(404).send({ message: "User not found" });
 
-export async function getWishlist(req,res){
-try{
-  const {id}=req.user;
-  const user=await User.findById(id);
-  if(!user) return res.status(404).send({message:"User not found"});
-  return res.send({wishlist:user.wishlist});
-}
-catch(error){
-  return res.status(500).send({errorString:error.message});
-}
+    if (user.wishlist.length > 0) {
+      const allWishlistProducts = user.wishlist.map(async (productID) => {
+        return await Product.findById(productID);
+      });
+      
+      const productsInWishlist = await Promise.all(allWishlistProducts);
+      return res.send({ wishlist: productsInWishlist});
+    }
+  } catch (error) {
+    return res.status(500).send({ errorString: error.message });
+  }
 }

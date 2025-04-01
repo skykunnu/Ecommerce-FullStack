@@ -8,7 +8,7 @@ import { useAdminAuth } from "../admin/Context/AdminAuthProvider";
 
 function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { cart, fetchCategories, fetchWishlist } = useEcom();
+  const { fetchCategories, fetchWishlist } = useEcom();
   const { isUserLoggedIn, logout } = useAuth();
   const { isAdminLoggedIn, adminLogout } = useAdminAuth();
   const [categories, setCategories] = useState([]);
@@ -122,7 +122,7 @@ function Header() {
           <p className="flex relative">
             Cart
             <span className="absolute right-[-14px] top-[-9px] rounded-full bg-red-600 text-white px-[5px] mt-1 text-xs">
-              {cart.length > 0 ? cart.length : cart.length}
+              {/* {cart?.length > 0 ? cart.length : cart.length} */}
             </span>
             <FaCartShopping className="text-lg mt-1" />
           </p>

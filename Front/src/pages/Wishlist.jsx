@@ -1,54 +1,34 @@
 import { useEcom } from "../Context/EcomProvider";
-import { Link } from "react-router-dom";
-import { MdOutlineCurrencyRupee } from "react-icons/md";
+import { useEffect, useState } from "react";
 
 function Wishlist() {
-  const { wishlist } = useEcom(); // this useEcom is nothing but say useContext(ecomContext). 
-  console.log(wishlist);
+  const { fetchWishlist } = useEcom(); // this useEcom is nothing but say useContext(ecomContext).
+  const [wishlist, setWishlist] = useState([]);
+
+  async function Fetch() {
+    const data = await fetchWishlist();
+    setWishlist(data);
+  }
+  useEffect(() => {
+    Fetch();
+  }, []);
 
   return (
     <div>
-      {wishlist.length === 0 ? (
-        <div className="emptyCart">
-          <h2>No Items in the wishlist.</h2>
-          <p>
-            <Link to="/">Go to Home</Link>
-          </p>
-        </div>
-      ) : (
-        <>
-          <div className='mx-5'>
-            {wishlist.map((Item) => {
-              console.log(Item)
-              return (
-                <div key={Item.product._id}>
-                  <img
-                    src={Item.product.image}
-                    className="w-[9rem] h-[9rem]"
-                  />
-                  <div>
-                    <h3 className="text-2xl mb-2">{Item.product.title}</h3>
-                    <p className="flex items-center py-1 font-bold">
-                      <MdOutlineCurrencyRupee className="" />
-                      <span>{Item.product.OriginalPrice}</span>
-                    </p>
-                    <div className="flex flex-col">
-                      <span>
-                        <strong>Brand:- </strong>
-                        {Item.product.brand}
-                      </span>
-                      <span>
-                        <strong>Description:- </strong>
-                        {Item.product.description}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
+      {wishlist &&
+        wishlist.map((item) => {
+          return (
+            <div key={item._id} className='flex items-center gap-5 border m-5 rounded-2xl py-3'>
+
+              <img src={item.image} alt="" className='w-[130px] h-[140px] mx-5'/>
+             <div className='flex-col gap-1 text-lg'>  
+              <p className='font-bold'>{item.brand}</p>
+              <p>{item.title}</p>
+              <p>{item.OriginalPrice}</p>
+             </div>
+            </div>
+          );
+        })}
     </div>
   );
 }
